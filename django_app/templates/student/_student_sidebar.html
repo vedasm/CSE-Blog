@@ -1,0 +1,31 @@
+<aside class="admin-sidebar" id="adminSidebar" aria-hidden="false">
+    <div class="sidebar-header">
+        <i class="fa-solid fa-graduation-cap"></i>
+        <span>STUDENT PORTAL</span>
+    </div>
+    <ul class="nav-list">
+        <li class="nav-item">
+            <a href="{% url 'public_blog:my_blogs' %}" class="nav-link-admin {% if request.resolver_match.url_name == 'my_blogs' %}active{% endif %}">
+                <i class="fa-solid fa-gauge"></i> My Dashboard
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{% url 'public_blog:create' %}" class="nav-link-admin {% if request.resolver_match.url_name == 'create' %}active{% endif %}">
+                <i class="fa-solid fa-pen-to-square"></i> Compose Blog
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{% url 'core:home' %}" class="nav-link-admin" target="_blank">
+                <i class="fa-solid fa-globe"></i> View Public Site
+            </a>
+        </li>
+    </ul>
+    <div class="p-3 border-top border-secondary mt-auto">
+        <form method="post" action="{% url 'student_accounts:logout' %}" class="m-0">
+            {% csrf_token %}
+            <button class="btn btn-link text-white text-decoration-none w-100 text-start p-2 nav-link-admin">
+                <i class="fa-solid fa-right-from-bracket"></i> Logout
+            </button>
+        </form>
+    </div>
+</aside>

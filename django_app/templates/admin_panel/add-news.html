@@ -1,0 +1,13 @@
+{% extends 'base_admin.html' %}
+{% block page_title %}Create News Bulletin{% endblock %}
+
+{% block content %}
+<div class="mb-4 d-flex align-items-center justify-content-between">
+    <div>
+        <h3 class="fw-bold mb-1">Add Department Bulletin / News</h3>
+        <p class="text-muted mb-0">Publish official notices, circulars, placement alerts, and event updates for students.</p>
+    </div>
+</div>
+
+{% include 'admin_panel/news-form.html' %}
+{% endblock %}

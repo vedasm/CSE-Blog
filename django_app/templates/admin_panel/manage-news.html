@@ -1,0 +1,210 @@
+{% extends 'base_admin.html' %}
+{% block page_title %}Manage Department News & Bulletins{% endblock %}
+
+{% block content %}
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+    <div class="d-flex flex-wrap align-items-center gap-3">
+        <form class="d-flex gap-2" method="get">
+            <input class="form-control" name="search" value="{{ request.GET.search }}" placeholder="Search news & circulars...">
+            {% if request.GET.category %}
+                <input type="hidden" name="category" value="{{ request.GET.category }}">
+            {% endif %}
+            <button class="btn btn-outline-primary" type="submit">
+                <i class="fa-solid fa-magnifying-glass"></i>
+            </button>
+            {% if request.GET.search or request.GET.category %}
+                <a href="{% url 'news:manage' %}" class="btn btn-light" title="Reset Filters">
+                    <i class="fa-solid fa-xmark"></i>
+                </a>
+            {% endif %}
+        </form>
+
+        <div class="dropdown">
+            <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                <i class="fa-solid fa-filter me-1"></i>
+                {% if request.GET.category %}
+                    {{ request.GET.category|title }}
+                {% else %}
+                    All Categories
+                {% endif %}
+            </button>
+            <ul class="dropdown-menu shadow">
+                <li><a class="dropdown-item {% if not request.GET.category %}active{% endif %}" href="{% url 'news:manage' %}">All Categories</a></li>
+                <li><hr class="dropdown-divider"></li>
+                {% for code, label in categories %}
+                    <li>
+                        <a class="dropdown-item {% if request.GET.category == code %}active{% endif %}" href="?category={{ code }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">
+                            {{ label }}
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+    {% if request.user.role != 'viewer' %}
+    <a class="btn btn-success px-4" href="{% url 'news:add' %}">
+        <i class="fa-solid fa-plus me-1"></i> Add News Bulletin
+    </a>
+    {% endif %}
+</div>
+
+<!-- Stats Row -->
+<div class="row g-3 mb-4">
+    <div class="col-md-4">
+        <div class="card p-3 border-0 shadow-sm bg-white">
+            <div class="d-flex align-items-center gap-3">
+                <div class="p-2 bg-primary bg-opacity-10 text-primary rounded-circle">
+                    <i class="fa-solid fa-bullhorn fa-lg"></i>
+                </div>
+                <div>
+                    <h4 class="mb-0 fw-bold">{{ total_news }}</h4>
+                    <span class="text-muted small">Total Announcements</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card p-3 border-0 shadow-sm bg-white">
+            <div class="d-flex align-items-center gap-3">
+                <div class="p-2 bg-danger bg-opacity-10 text-danger rounded-circle">
+                    <i class="fa-solid fa-thumbtack fa-lg"></i>
+                </div>
+                <div>
+                    <h4 class="mb-0 fw-bold">{{ pinned_news }}</h4>
+                    <span class="text-muted small">Urgent / Pinned Bulletins</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card p-3 border-0 shadow-sm bg-white">
+            <div class="d-flex align-items-center gap-3">
+                <div class="p-2 bg-success bg-opacity-10 text-success rounded-circle">
+                    <i class="fa-solid fa-check-double fa-lg"></i>
+                </div>
+                <div>
+                    <h4 class="mb-0 fw-bold">{{ published_news }}</h4>
+                    <span class="text-muted small">Active on Public Portal</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card shadow-sm border-0 overflow-hidden">
+    <div class="table-responsive">
+        <table class="table table-modern align-middle mb-0">
+            <thead>
+                <tr>
+                    <th style="width: 40px;">Pin</th>
+                    <th>Title & Category</th>
+                    <th>Category</th>
+                    <th>Date Published</th>
+                    <th>Attachment / Link</th>
+                    <th>Status</th>
+                    <th class="text-end">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in news_items %}
+                <tr>
+                    <td>
+                        {% if request.user.role != 'viewer' %}
+                        <form method="post" action="{% url 'news:toggle_pin' item.pk %}" class="d-inline">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-sm p-1 border-0 bg-transparent" title="Toggle Urgent Pin">
+                                {% if item.is_pinned %}
+                                    <i class="fa-solid fa-thumbtack text-danger fa-lg" title="Pinned / Urgent"></i>
+                                {% else %}
+                                    <i class="fa-regular fa-thumbtack text-muted fa-lg" title="Click to Pin"></i>
+                                {% endif %}
+                            </button>
+                        </form>
+                        {% else %}
+                            {% if item.is_pinned %}
+                                <i class="fa-solid fa-thumbtack text-danger"></i>
+                            {% endif %}
+                        {% endif %}
+                    </td>
+                    <td>
+                        <div class="fw-bold text-dark">{{ item.title }}</div>
+                        <div class="small text-muted">{{ item.summary|truncatewords:14 }}</div>
+                    </td>
+                    <td>
+                        <span class="badge 
+                            {% if item.category == 'hackathon' %}bg-warning text-dark
+                            {% elif item.category == 'placement' %}bg-success
+                            {% elif item.category == 'exam' %}bg-danger
+                            {% elif item.category == 'circular' %}bg-info text-dark
+                            {% elif item.category == 'event' %}bg-primary
+                            {% else %}bg-secondary{% endif %}">
+                            {{ item.get_category_display }}
+                        </span>
+                    </td>
+                    <td class="text-muted small">
+                        {{ item.published_at|date:'d M Y, h:i A' }}
+                    </td>
+                    <td>
+                        <div class="d-flex gap-2">
+                            {% if item.attachment %}
+                                <a href="{{ item.attachment.url }}" target="_blank" class="badge bg-light text-primary border text-decoration-none" title="Download Circular / PDF">
+                                    <i class="fa-solid fa-paperclip me-1"></i> Attachment
+                                </a>
+                            {% endif %}
+                            {% if item.external_link %}
+                                <a href="{{ item.external_link }}" target="_blank" class="badge bg-light text-secondary border text-decoration-none" title="External Link">
+                                    <i class="fa-solid fa-arrow-up-right-from-square me-1"></i> Link
+                                </a>
+                            {% endif %}
+                            {% if not item.attachment and not item.external_link %}
+                                <span class="text-muted small">—</span>
+                            {% endif %}
+                        </div>
+                    </td>
+                    <td>
+                        {% if item.is_published %}
+                            <span class="badge bg-success-subtle text-success border border-success-subtle">Published</span>
+                        {% else %}
+                            <span class="badge bg-secondary-subtle text-secondary border border-secondary-subtle">Draft</span>
+                        {% endif %}
+                    </td>
+                    <td class="text-end">
+                        <div class="d-inline-flex gap-1">
+                            <a href="{% url 'public_news:detail' item.slug %}" target="_blank" class="btn btn-outline-info btn-sm" title="Preview Public Page">
+                                <i class="fa-solid fa-eye"></i>
+                            </a>
+                            {% if request.user.role != 'viewer' %}
+                            <a class="btn btn-outline-warning btn-sm" href="{% url 'news:edit' item.pk %}" title="Edit News">
+                                <i class="fa-solid fa-pen-to-square"></i>
+                            </a>
+                            <form class="d-inline" method="post" action="{% url 'news:delete' item.pk %}" data-confirm="Are you sure you want to delete this bulletin?">
+                                {% csrf_token %}
+                                <button class="btn btn-outline-danger btn-sm" type="submit" title="Delete News">
+                                    <i class="fa-solid fa-trash"></i>
+                                </button>
+                            </form>
+                            {% endif %}
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="7" class="text-center py-5 text-muted">
+                        <i class="fa-solid fa-newspaper fa-3x mb-3 text-secondary opacity-50"></i>
+                        <p class="mb-0">No news announcements found matching your criteria.</p>
+                        {% if request.user.role != 'viewer' %}
+                        <a href="{% url 'news:add' %}" class="btn btn-primary btn-sm mt-3">
+                            <i class="fa-solid fa-plus me-1"></i> Create First Announcement
+                        </a>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% include 'public/_pagination.html' with page_obj=page_obj %}
+{% endblock %}

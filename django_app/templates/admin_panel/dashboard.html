@@ -1,0 +1,222 @@
+{% extends 'base_admin.html' %}
+{% block page_title %}Dashboard{% endblock %}
+
+{% block content %}
+<!-- Metric Cards Grid (Auto-wrapping 5 Equal Columns) -->
+<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-xl-5 g-3 mb-5">
+    <!-- Total Blogs -->
+    <div class="col">
+        <div class="stat-card h-100 shadow-xs">
+            <div class="d-flex align-items-center justify-content-between mb-3">
+                <div class="stat-icon-wrapper bg-primary bg-opacity-10 text-primary">
+                    <i class="fa-solid fa-file-lines"></i>
+                </div>
+                <div class="d-flex flex-column align-items-end gap-1">
+                    <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-2 py-0.5" style="font-size: 0.65rem;">
+                        {{ published_blogs }} live
+                    </span>
+                    {% if pending_blogs %}
+                    <a href="{% url 'blog:manage' %}?status=pending" class="badge bg-warning-subtle text-warning border border-warning-subtle rounded-pill px-2 py-0.5 text-decoration-none animate-pulse" style="font-size: 0.65rem;">
+                        {{ pending_blogs }} review
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+            <div>
+                <div class="stat-card-number">{{ total_blogs }}</div>
+                <div class="stat-card-label">Total Blogs</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Announcements -->
+    <div class="col">
+        <div class="stat-card h-100 shadow-xs">
+            <div class="d-flex align-items-center justify-content-between mb-3">
+                <div class="stat-icon-wrapper bg-danger bg-opacity-10 text-danger">
+                    <i class="fa-solid fa-bullhorn"></i>
+                </div>
+                <span class="badge bg-danger-subtle text-danger border border-danger-subtle rounded-pill px-2.5 py-1">
+                    {{ pinned_news }} urgent
+                </span>
+            </div>
+            <div>
+                <div class="stat-card-number">{{ total_news }}</div>
+                <div class="stat-card-label">Announcements</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Events -->
+    <div class="col">
+        <div class="stat-card h-100 shadow-xs">
+            <div class="d-flex align-items-center justify-content-between mb-3">
+                <div class="stat-icon-wrapper bg-success bg-opacity-10 text-success">
+                    <i class="fa-solid fa-calendar-check"></i>
+                </div>
+                <span class="badge bg-info-subtle text-info border border-info-subtle rounded-pill px-2.5 py-1">
+                    {{ upcoming_events }} upcoming
+                </span>
+            </div>
+            <div>
+                <div class="stat-card-number">{{ total_events }}</div>
+                <div class="stat-card-label">Events</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Faculty -->
+    <div class="col">
+        <div class="stat-card h-100 shadow-xs">
+            <div class="d-flex align-items-center justify-content-between mb-3">
+                <div class="stat-icon-wrapper bg-warning bg-opacity-10 text-warning">
+                    <i class="fa-solid fa-user-tie"></i>
+                </div>
+                <span class="badge bg-light text-secondary border rounded-pill px-2.5 py-1">
+                    Active
+                </span>
+            </div>
+            <div>
+                <div class="stat-card-number">{{ total_faculty }}</div>
+                <div class="stat-card-label">Faculty Members</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Messages -->
+    <div class="col">
+        <div class="stat-card h-100 shadow-xs">
+            <div class="d-flex align-items-center justify-content-between mb-3">
+                <div class="stat-icon-wrapper bg-info bg-opacity-10 text-info">
+                    <i class="fa-solid fa-envelope"></i>
+                </div>
+                {% if unread_messages %}
+                    <span class="badge bg-danger-subtle text-danger border border-danger-subtle rounded-pill px-2.5 py-1">
+                        {{ unread_messages }} unread
+                    </span>
+                {% else %}
+                    <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-2.5 py-1">
+                        All caught up
+                    </span>
+                {% endif %}
+            </div>
+            <div>
+                <div class="stat-card-number">{{ unread_messages }}</div>
+                <div class="stat-card-label">Inquiries & Messages</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Recent News Bulletins & Recent Articles Split -->
+<div class="row g-4 mb-4">
+    <!-- Recent News Announcements -->
+    <div class="col-lg-6">
+        <div class="card shadow-sm border-0 p-4 h-100 bg-white rounded-4">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h4 class="mb-0 fw-bold d-flex align-items-center gap-2 font-heading">
+                    <i class="fa-solid fa-bullhorn text-primary"></i> Latest News & Bulletins
+                </h4>
+                <a href="{% url 'news:manage' %}" class="btn btn-outline-primary btn-sm rounded-pill px-3">
+                    View All <i class="fa-solid fa-arrow-right ms-1"></i>
+                </a>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-modern align-middle mb-0">
+                    <thead>
+                        <tr>
+                            <th>Headline</th>
+                            <th>Category</th>
+                            <th>Date</th>
+                            <th class="text-end">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in recent_news %}
+                        <tr>
+                            <td>
+                                <div class="fw-semibold text-dark">
+                                    {% if item.is_pinned %}<i class="fa-solid fa-thumbtack text-danger me-1" title="Urgent Bulletin"></i>{% endif %}
+                                    {{ item.title|truncatechars:35 }}
+                                </div>
+                            </td>
+                            <td>
+                                <span class="badge category-badge-{{ item.category }} rounded-pill px-2.5 py-1" style="font-size: 0.72rem;">
+                                    {{ item.get_category_display }}
+                                </span>
+                            </td>
+                            <td class="text-muted small">{{ item.created_at|date:'d M' }}</td>
+                            <td class="text-end">
+                                <a class="btn btn-outline-warning btn-sm rounded-circle p-1" href="{% url 'news:edit' item.pk %}" title="Edit Bulletin">
+                                    <i class="fa-solid fa-pen-to-square"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="4" class="text-center py-4 text-muted">
+                                <i class="fa-solid fa-bullhorn fa-2x opacity-25 mb-2 d-block"></i>
+                                No news bulletins published yet.
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Articles -->
+    <div class="col-lg-6">
+        <div class="card shadow-sm border-0 p-4 h-100 bg-white rounded-4">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h4 class="mb-0 fw-bold d-flex align-items-center gap-2 font-heading">
+                    <i class="fa-solid fa-file-pen text-primary"></i> Recent Articles
+                </h4>
+                <a href="{% url 'blog:manage' %}" class="btn btn-outline-primary btn-sm rounded-pill px-3">
+                    View All <i class="fa-solid fa-arrow-right ms-1"></i>
+                </a>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-modern align-middle mb-0">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Status</th>
+                            <th>Date</th>
+                            <th class="text-end">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for blog in recent_blogs %}
+                        <tr>
+                            <td>
+                                <div class="fw-semibold text-dark">{{ blog.title|truncatechars:35 }}</div>
+                            </td>
+                            <td>
+                                <span class="badge rounded-pill {% if blog.status == 'published' %}bg-success-subtle text-success border border-success-subtle{% else %}bg-secondary-subtle text-secondary border border-secondary-subtle{% endif %}" style="font-size: 0.72rem;">
+                                    {{ blog.get_status_display }}
+                                </span>
+                            </td>
+                            <td class="text-muted small">{{ blog.created_at|date:'d M' }}</td>
+                            <td class="text-end">
+                                <a class="btn btn-outline-warning btn-sm rounded-circle p-1" href="{% url 'blog:edit' blog.pk %}" title="Edit Blog">
+                                    <i class="fa-solid fa-pen-to-square"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="4" class="text-center py-4 text-muted">
+                                <i class="fa-solid fa-newspaper fa-2x opacity-25 mb-2 d-block"></i>
+                                No blogs published yet.
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

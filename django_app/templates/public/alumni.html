@@ -1,0 +1,55 @@
+{% extends 'base_public.html' %}
+{% load static %}
+
+{% block title %}Alumni Network (SHIMMER) | Department of CSE | SRM Valliammai{% endblock %}
+
+{% block content %}
+<!-- Banner -->
+<section class="bg-gradient-dark py-5 text-white position-relative overflow-hidden">
+    <div class="hero-grid-overlay"></div>
+    <div class="container py-4 position-relative z-2">
+        <div class="d-inline-flex align-items-center gap-2 px-3 py-1.5 rounded-pill hero-badge mb-3">
+            <span class="live-pulse-dot bg-success"></span>
+            <span class="small fw-semibold text-white">SHIMMER · CSE Alumni Chapter</span>
+        </div>
+        <h1 class="display-5 fw-extrabold mb-3 font-heading">
+            Alumni Association & <span class="text-gradient-cyan">Global Network</span>
+        </h1>
+        <p class="lead text-light opacity-90 mb-0" style="max-width: 680px;">
+            Connecting generations of SRM VEC CSE graduates leading engineering teams across global tech organizations.
+        </p>
+    </div>
+</section>
+
+<!-- Alumni Section -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="row g-4 mb-5">
+            {% for doc in alumni_documents %}
+            <div class="col-md-6 col-lg-4">
+                <div class="card border-0 rounded-4 shadow-sm p-4 bg-white h-100 d-flex flex-column justify-content-between">
+                    <div>
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <div class="rounded-3 bg-success bg-opacity-10 text-success d-flex align-items-center justify-content-center" style="width: 48px; height: 48px;">
+                                <i class="fa-solid fa-user-graduate fa-lg"></i>
+                            </div>
+                            <span class="badge bg-light text-dark border rounded-pill px-3 py-1 font-monospace" style="font-size: 0.76rem;">
+                                {{ doc.academic_year|default:'Report' }}
+                            </span>
+                        </div>
+                        <h5 class="fw-bold text-dark font-heading mb-2">{{ doc.title }}</h5>
+                        <p class="text-secondary small mb-4">{{ doc.description }}</p>
+                    </div>
+
+                    <div>
+                        <a href="{{ doc.download_url }}" target="_blank" class="btn btn-outline-success btn-sm rounded-pill w-100 py-2 d-flex align-items-center justify-content-center gap-2">
+                            <i class="fa-solid fa-file-pdf"></i> View Alumni Document
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,116 @@
+{% extends 'base_public.html' %}
+{% load static %}
+
+{% block title %}Research & Journal Publications | Department of CSE | SRM Valliammai{% endblock %}
+
+{% block content %}
+<!-- Banner -->
+<section class="bg-gradient-dark py-5 text-white position-relative overflow-hidden">
+    <div class="hero-grid-overlay"></div>
+    <div class="container py-4 position-relative z-2">
+        <div class="d-inline-flex align-items-center gap-2 px-3 py-1.5 rounded-pill hero-badge mb-3">
+            <span class="live-pulse-dot bg-info"></span>
+            <span class="small fw-semibold text-white">Anna University Recognized Research Centre</span>
+        </div>
+        <h1 class="display-5 fw-extrabold mb-3 font-heading">
+            Research & <span class="text-gradient-cyan">Journal Publications</span>
+        </h1>
+        <p class="lead text-light opacity-90 mb-0" style="max-width: 700px;">
+            Fostering innovation across Artificial Intelligence, High Performance Computing, Cyber Defense, and Cloud Distributed Systems.
+        </p>
+    </div>
+</section>
+
+<!-- Research Centre Highlight Card -->
+<section class="py-5 bg-light">
+    <div class="container">
+        {% if centre_document %}
+        <div class="card border-0 rounded-4 shadow-sm p-4 p-md-5 bg-white mb-5">
+            <div class="row align-items-center g-4">
+                <div class="col-md-8">
+                    <div class="d-flex align-items-center gap-2 mb-2">
+                        <span class="badge bg-primary bg-opacity-10 text-primary rounded-pill px-3 py-1">Centre of Excellence</span>
+                        <span class="text-muted small">Anna University Approved</span>
+                    </div>
+                    <h3 class="fw-bold font-heading text-dark mb-3">{{ centre_document.title }}</h3>
+                    <p class="text-secondary leading-relaxed mb-0">
+                        {{ centre_document.description|default:'The Department of Computer Science and Engineering is recognized as a dedicated Research Centre by Anna University, Chennai for carrying out collaborative Ph.D. and M.S. (By Research) programmes.' }}
+                    </p>
+                </div>
+                <div class="col-md-4 text-md-end">
+                    <a href="{{ centre_document.download_url }}" target="_blank" class="btn btn-primary rounded-pill px-4 py-2.5 shadow-xs d-inline-flex align-items-center gap-2">
+                        <i class="fa-solid fa-file-pdf"></i> View Research Centre Profile
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Journal Publications Directory -->
+        <div class="mb-4">
+            <h3 class="fw-bold font-heading text-dark mb-1 d-flex align-items-center gap-2">
+                <i class="fa-solid fa-book-open text-primary"></i> Yearly Journal Publications (Scopus & Web of Science)
+            </h3>
+            <p class="text-secondary small mb-4">Official publication directories of research papers published by department faculty and scholars.</p>
+        </div>
+
+        <div class="row g-4 mb-5">
+            {% for doc in research_documents %}
+            <div class="col-md-6 col-lg-4">
+                <div class="card border-0 rounded-4 shadow-sm p-4 bg-white h-100 d-flex flex-column justify-content-between">
+                    <div>
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <div class="rounded-3 bg-primary bg-opacity-10 text-primary d-flex align-items-center justify-content-center" style="width: 48px; height: 48px;">
+                                <i class="fa-solid fa-file-lines fa-lg"></i>
+                            </div>
+                            <span class="badge bg-light text-primary border rounded-pill px-3 py-1 font-monospace" style="font-size: 0.76rem;">
+                                {{ doc.academic_year|default:'Research' }}
+                            </span>
+                        </div>
+                        <h5 class="fw-bold text-dark font-heading mb-2">{{ doc.title }}</h5>
+                        <p class="text-secondary small mb-4">{{ doc.description }}</p>
+                    </div>
+
+                    <div>
+                        <a href="{{ doc.download_url }}" target="_blank" class="btn btn-outline-primary btn-sm rounded-pill w-100 py-2 d-flex align-items-center justify-content-center gap-2">
+                            <i class="fa-solid fa-arrow-down-to-line"></i> Download Publications PDF
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Research Domains Matrix -->
+        <div class="card border-0 rounded-4 shadow-sm p-4 p-md-5 bg-white">
+            <h4 class="fw-bold font-heading text-dark mb-3 text-center">Core Research Thrust Areas</h4>
+            <div class="row g-3 text-center mt-2">
+                <div class="col-6 col-md-3">
+                    <div class="p-3 bg-light rounded-3 border">
+                        <i class="fa-solid fa-brain text-info fa-2x mb-2 d-block"></i>
+                        <h6 class="fw-bold text-dark mb-0">Artificial Intelligence</h6>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="p-3 bg-light rounded-3 border">
+                        <i class="fa-solid fa-shield-halved text-danger fa-2x mb-2 d-block"></i>
+                        <h6 class="fw-bold text-dark mb-0">Cyber Security</h6>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="p-3 bg-light rounded-3 border">
+                        <i class="fa-solid fa-cloud text-primary fa-2x mb-2 d-block"></i>
+                        <h6 class="fw-bold text-dark mb-0">Cloud & Edge Systems</h6>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="p-3 bg-light rounded-3 border">
+                        <i class="fa-solid fa-microchip text-success fa-2x mb-2 d-block"></i>
+                        <h6 class="fw-bold text-dark mb-0">IoT & Sensor Networks</h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

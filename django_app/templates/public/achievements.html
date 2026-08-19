@@ -1,0 +1,87 @@
+{% extends 'base_public.html' %}
+{% load static %}
+
+{% block title %}Student & Faculty Achievements | Department of CSE | SRM Valliammai{% endblock %}
+
+{% block content %}
+<!-- Banner -->
+<section class="bg-gradient-dark py-5 text-white position-relative overflow-hidden">
+    <div class="hero-grid-overlay"></div>
+    <div class="container py-4 position-relative z-2">
+        <div class="d-inline-flex align-items-center gap-2 px-3 py-1.5 rounded-pill hero-badge mb-3">
+            <span class="live-pulse-dot bg-warning"></span>
+            <span class="small fw-semibold text-white">Excellence in Hackathons, Patents & Contests</span>
+        </div>
+        <h1 class="display-5 fw-extrabold mb-3 font-heading">
+            Department & Student <span class="text-gradient-cyan">Achievements</span>
+        </h1>
+        <p class="lead text-light opacity-90 mb-0" style="max-width: 680px;">
+            Celebrating national hackathon triumphs, patent grants, top university ranks, and technical symposium awards achieved by CSE students and faculty.
+        </p>
+    </div>
+</section>
+
+<!-- Milestone Cards -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="row g-4 mb-5">
+            <div class="col-md-4">
+                <div class="card border-0 rounded-4 shadow-sm p-4 bg-white text-center h-100">
+                    <i class="fa-solid fa-trophy text-warning fa-3x mb-3 d-block"></i>
+                    <h3 class="fw-bold font-heading text-dark mb-1">40+ Hackathon Wins</h3>
+                    <p class="text-secondary small mb-0">Winners in Smart India Hackathon, internal coding marathons, and collegiate dev challenges.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card border-0 rounded-4 shadow-sm p-4 bg-white text-center h-100">
+                    <i class="fa-solid fa-certificate text-primary fa-3x mb-3 d-block"></i>
+                    <h3 class="fw-bold font-heading text-dark mb-1">Patents & Copyrights</h3>
+                    <p class="text-secondary small mb-0">Intellectual property filed and granted across AI, IoT, and embedded smart systems.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card border-0 rounded-4 shadow-sm p-4 bg-white text-center h-100">
+                    <i class="fa-solid fa-medal text-success fa-3x mb-3 d-block"></i>
+                    <h3 class="fw-bold font-heading text-dark mb-1">University Rank Holders</h3>
+                    <p class="text-secondary small mb-0">Consistent Anna University gold medals and top academic percentiles in CSE discipline.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Official Achievement PDF Archives -->
+        <div class="mb-4">
+            <h3 class="fw-bold font-heading text-dark mb-1 d-flex align-items-center gap-2">
+                <i class="fa-solid fa-file-pdf text-primary"></i> Official Achievement Archive Documents
+            </h3>
+            <p class="text-secondary small mb-4">Official compilations of student and faculty awards, competition victories, and certifications.</p>
+        </div>
+
+        <div class="row g-4 mb-5">
+            {% for doc in achievement_documents %}
+            <div class="col-md-6 col-lg-4">
+                <div class="card border-0 rounded-4 shadow-sm p-4 bg-white h-100 d-flex flex-column justify-content-between">
+                    <div>
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <div class="rounded-3 bg-warning bg-opacity-10 text-warning d-flex align-items-center justify-content-center" style="width: 48px; height: 48px;">
+                                <i class="fa-solid fa-award fa-lg"></i>
+                            </div>
+                            <span class="badge bg-light text-dark border rounded-pill px-3 py-1 font-monospace" style="font-size: 0.76rem;">
+                                {{ doc.academic_year|default:'Archive' }}
+                            </span>
+                        </div>
+                        <h5 class="fw-bold text-dark font-heading mb-2">{{ doc.title }}</h5>
+                        <p class="text-secondary small mb-4">{{ doc.description }}</p>
+                    </div>
+
+                    <div>
+                        <a href="{{ doc.download_url }}" target="_blank" class="btn btn-outline-warning btn-sm rounded-pill w-100 py-2 d-flex align-items-center justify-content-center gap-2 text-dark fw-semibold">
+                            <i class="fa-solid fa-arrow-down-to-line text-warning"></i> View Achievements PDF
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}

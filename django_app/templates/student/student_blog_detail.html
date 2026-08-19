@@ -1,0 +1,132 @@
+{% extends 'student/student_base.html' %}
+{% block title %}Preview: {{ blog.title }} | Student Portal{% endblock %}
+{% block page_title %}Article Preview{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-10">
+        <!-- Status Alert Banner -->
+        {% if blog.status == 'published' %}
+        <div class="alert alert-success border-0 shadow-xs rounded-4 d-flex align-items-center gap-3 p-4 mb-4">
+            <i class="fa-solid fa-circle-check fa-2x text-success"></i>
+            <div>
+                <h5 class="fw-bold mb-1">Your article is Live!</h5>
+                <p class="small mb-0">This post is published and visible on the department public tech blogs page.</p>
+            </div>
+            <a href="{% url 'public_blog:detail' blog.slug %}" target="_blank" class="btn btn-success btn-sm rounded-pill px-3 ms-auto">
+                View Live Article <i class="fa-solid fa-arrow-up-right-from-square ms-1"></i>
+            </a>
+        </div>
+        {% elif blog.status == 'pending' %}
+        <div class="alert alert-warning border-0 shadow-xs rounded-4 d-flex align-items-center gap-3 p-4 mb-4">
+            <i class="fa-solid fa-clock fa-2x text-warning"></i>
+            <div>
+                <h5 class="fw-bold mb-1">Pending Administrator Review</h5>
+                <p class="small mb-0">Your article has been submitted for verification. You cannot edit it while it is under review.</p>
+            </div>
+        </div>
+        {% elif blog.status == 'approved' %}
+        <div class="alert alert-info border-0 shadow-xs rounded-4 d-flex align-items-center gap-3 p-4 mb-4">
+            <i class="fa-solid fa-circle-info fa-2x text-info"></i>
+            <div>
+                <h5 class="fw-bold mb-1">Approved & Awaiting Publication</h5>
+                <p class="small mb-0">An administrator has approved your blog. It will be published to the public section shortly.</p>
+            </div>
+        </div>
+        {% elif blog.status == 'rejected' %}
+        <div class="alert alert-danger border-0 shadow-xs rounded-4 p-4 mb-4">
+            <div class="d-flex align-items-center gap-3 mb-2">
+                <i class="fa-solid fa-circle-xmark fa-2x text-danger"></i>
+                <div>
+                    <h5 class="fw-bold mb-1">Submission Rejected</h5>
+                    <p class="small mb-0">Your article requires revision before it can be approved. Please review the reason below and resubmit.</p>
+                </div>
+                <a href="{% url 'public_blog:edit' blog.pk %}" class="btn btn-danger btn-sm rounded-pill px-3 ms-auto">
+                    Edit & Resubmit <i class="fa-solid fa-pen-to-square ms-1"></i>
+                </a>
+            </div>
+            {% if blog.rejection_reason %}
+            <div class="mt-3 bg-white bg-opacity-75 p-3 rounded-3 border border-danger-subtle small text-danger fw-semibold">
+                <i class="fa-solid fa-comment-dots me-2"></i><strong>Admin Feedback:</strong> {{ blog.rejection_reason }}
+            </div>
+            {% endif %}
+        </div>
+        {% else %}
+        <div class="alert alert-secondary border-0 shadow-xs rounded-4 d-flex align-items-center gap-3 p-4 mb-4">
+            <i class="fa-solid fa-floppy-disk fa-2x text-secondary"></i>
+            <div>
+                <h5 class="fw-bold mb-1">Article Draft</h5>
+                <p class="small mb-0">This post is saved as a draft. Click edit to continue composing or submit it for review.</p>
+            </div>
+            <div class="d-flex gap-2 ms-auto">
+                <a href="{% url 'public_blog:edit' blog.pk %}" class="btn btn-outline-secondary btn-sm rounded-pill px-3">
+                    Edit Blog
+                </a>
+                <form class="m-0" method="post" action="{% url 'public_blog:submit' blog.pk %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-primary btn-sm rounded-pill px-3">
+                        Submit Review
+                    </button>
+                </form>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Blog Document -->
+        <article class="card shadow-sm border-0 rounded-4 overflow-hidden bg-white mb-4">
+            {% if blog.featured_image %}
+            <img src="{{ blog.featured_image.url }}" class="w-100 object-fit-cover" style="max-height: 400px;" alt="{{ blog.title }}">
+            {% endif %}
+            
+            <div class="card-body p-4 p-md-5">
+                <div class="d-flex flex-wrap align-items-center gap-3 mb-3">
+                    {% if blog.category %}
+                    <span class="badge bg-primary rounded-pill px-3 py-1.5" style="font-size: 0.8rem;">
+                        {{ blog.category.name }}
+                    </span>
+                    {% endif %}
+                    <span class="text-secondary small">
+                        <i class="fa-regular fa-calendar-days me-1"></i>Created: {{ blog.created_at|date:'d M Y H:i' }}
+                    </span>
+                    <span class="text-secondary small">
+                        <i class="fa-regular fa-clock me-1"></i>Updated: {{ blog.updated_at|date:'d M Y H:i' }}
+                    </span>
+                </div>
+                
+                <h1 class="fw-bold font-heading text-dark mb-4" style="font-size: 2.25rem;">{{ blog.title }}</h1>
+                
+                <!-- Author block -->
+                <div class="d-flex align-items-center gap-3 mb-4 pb-4 border-bottom">
+                    <img src="https://ui-avatars.com/api/?name={{ blog.author.email|urlencode }}&background=365ACA&color=fff&size=80" class="rounded-circle shadow-xs" width="48" height="48" alt="Author Avatar">
+                    <div>
+                        <div class="fw-bold text-dark mb-0.5">{{ blog.author.get_full_name|default:blog.author.email }}</div>
+                        <div class="text-secondary small">Author Student</div>
+                    </div>
+                </div>
+                
+                <!-- Main Content -->
+                <div class="blog-details-content text-dark lh-lg" style="font-size: 1.1rem;">
+                    {{ blog.content|safe }}
+                </div>
+                
+                {% if blog.tags %}
+                <div class="mt-5 pt-4 border-top">
+                    <h6 class="fw-bold text-secondary mb-2">Tags:</h6>
+                    <div class="d-flex flex-wrap gap-2">
+                        {% for tag in blog.tags.split %}
+                        <span class="badge bg-light text-secondary border rounded-pill px-2.5 py-1.5" style="font-size: 0.78rem;">#{{ tag|cut:',' }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </article>
+        
+        <div class="text-center pt-2 mb-5">
+            <a href="{% url 'public_blog:my_blogs' %}" class="btn btn-outline-secondary rounded-pill px-4">
+                <i class="fa-solid fa-arrow-left me-1"></i> Back to Dashboard
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

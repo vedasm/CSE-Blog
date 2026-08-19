@@ -1,0 +1,126 @@
+{% extends 'base_public.html' %}
+{% block title %}{{ news.title }} | SRM Valliammai CSE News{% endblock %}
+
+{% block content %}
+<section class="container py-5">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'core:home' %}" class="text-decoration-none text-primary"><i class="fa-solid fa-house me-1"></i> Home</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'public_news:list' %}" class="text-decoration-none text-primary">News & Bulletins</a></li>
+            <li class="breadcrumb-item active text-truncate max-w-400" aria-current="page">{{ news.title }}</li>
+        </ol>
+    </nav>
+
+    <div class="row g-5">
+        <!-- Main News Article -->
+        <div class="col-lg-8">
+            <article class="card border-0 shadow-sm rounded-4 p-4 p-md-5 bg-white">
+                <!-- Header Meta -->
+                <div class="d-flex flex-wrap align-items-center gap-2 mb-3">
+                    {% if news.is_pinned %}
+                        <span class="badge bg-danger-gradient text-white px-3 py-1.5 rounded-pill shadow-xs d-inline-flex align-items-center gap-1">
+                            <span class="live-pulse-dot bg-white"></span> URGENT BULLETIN
+                        </span>
+                    {% endif %}
+                    <span class="badge category-badge-{{ news.category }} rounded-pill px-3 py-1.5">
+                        {{ news.get_category_display }}
+                    </span>
+                    <span class="text-muted small ms-auto d-flex align-items-center gap-2">
+                        <i class="fa-regular fa-calendar"></i> {{ news.published_at|date:'d F Y' }}
+                        <span class="opacity-50">·</span>
+                        <i class="fa-regular fa-eye"></i> {{ news.views_count }} views
+                    </span>
+                </div>
+
+                <h1 class="display-6 fw-bold text-dark mb-4">{{ news.title }}</h1>
+
+                {% if news.summary %}
+                <div class="lead text-secondary p-3 bg-light rounded-3 border-start border-4 border-primary mb-4">
+                    {{ news.summary }}
+                </div>
+                {% endif %}
+
+                <!-- Main Content -->
+                <div class="news-article-content fs-5 text-dark lh-lg mb-5" style="white-space: pre-line;">
+                    {{ news.content }}
+                </div>
+
+                <!-- Attachments & Actions Box -->
+                {% if news.attachment or news.external_link %}
+                <div class="p-4 rounded-4 bg-light border mb-4">
+                    <h5 class="fw-bold text-primary mb-3 d-flex align-items-center gap-2">
+                        <i class="fa-solid fa-paperclip"></i> Official Attachments & Links
+                    </h5>
+                    <div class="d-flex flex-wrap gap-3">
+                        {% if news.attachment %}
+                        <a href="{{ news.attachment.url }}" target="_blank" class="btn btn-primary rounded-pill px-4 py-2 d-inline-flex align-items-center gap-2 shadow-sm">
+                            <i class="fa-solid fa-file-arrow-down fa-lg"></i> Download Attached Document
+                        </a>
+                        {% endif %}
+                        {% if news.external_link %}
+                        <a href="{{ news.external_link }}" target="_blank" class="btn btn-outline-success rounded-pill px-4 py-2 d-inline-flex align-items-center gap-2">
+                            <i class="fa-solid fa-arrow-up-right-from-square"></i> Open Registration / Portal Link
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Footer / Share Actions -->
+                <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 pt-4 border-top">
+                    <a href="{% url 'public_news:list' %}" class="btn btn-light rounded-pill px-4">
+                        <i class="fa-solid fa-arrow-left me-2"></i> All Announcements
+                    </a>
+                    <button type="button" class="btn btn-outline-secondary rounded-pill px-4" id="copyShareBtn" data-url="{{ request.build_absolute_uri }}">
+                        <i class="fa-solid fa-share-nodes me-2"></i> Share Circular
+                    </button>
+                </div>
+            </article>
+        </div>
+
+        <!-- Sidebar: Recent News Bulletins -->
+        <div class="col-lg-4">
+            <div class="sticky-top" style="top: 90px;">
+                <div class="card border-0 shadow-sm rounded-4 p-4 bg-white mb-4">
+                    <h5 class="fw-bold text-dark mb-4 d-flex align-items-center justify-content-between">
+                        <span><i class="fa-solid fa-bullhorn text-primary me-2"></i> Recent Notices</span>
+                        <a href="{% url 'public_news:list' %}" class="small text-primary text-decoration-none fw-normal">View All</a>
+                    </h5>
+
+                    <div class="recent-news-list">
+                        {% for recent in recent_news %}
+                        <div class="recent-news-item pb-3 mb-3 border-bottom border-light">
+                            <div class="d-flex align-items-center gap-2 mb-1">
+                                <span class="badge category-badge-{{ recent.category }} px-2 py-0.5" style="font-size: 0.72rem;">
+                                    {{ recent.get_category_display }}
+                                </span>
+                                <span class="text-muted small" style="font-size: 0.75rem;">
+                                    {{ recent.published_at|date:'d M' }}
+                                </span>
+                            </div>
+                            <h6 class="mb-1">
+                                <a href="{% url 'public_news:detail' recent.slug %}" class="text-decoration-none text-dark hover-primary fw-semibold">
+                                    {{ recent.title }}
+                                </a>
+                            </h6>
+                        </div>
+                        {% empty %}
+                        <p class="text-muted small mb-0">No other recent bulletins.</p>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Quick Help / Contact Box -->
+                <div class="card border-0 shadow-sm rounded-4 p-4 text-white bg-gradient-primary">
+                    <h5 class="fw-bold mb-2">Need Assistance?</h5>
+                    <p class="small opacity-90 mb-3">For queries regarding circulars, timetables, or placements, get in touch with the department office.</p>
+                    <a href="{% url 'contact:contact' %}" class="btn btn-warning rounded-pill btn-sm fw-semibold">
+                        Contact Department Office <i class="fa-solid fa-arrow-right ms-1"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

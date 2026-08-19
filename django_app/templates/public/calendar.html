@@ -1,0 +1,104 @@
+{% extends 'base_public.html' %}
+{% block title %}Academic Calendar & Schedules | SRM Valliammai CSE{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<div class="bg-gradient-dark text-white py-5 mb-5 position-relative overflow-hidden">
+    <div class="container position-relative z-1">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb mb-2">
+                        <li class="breadcrumb-item"><a href="{% url 'core:home' %}" class="text-white-50 text-decoration-none">Home</a></li>
+                        <li class="breadcrumb-item active text-white" aria-current="page">Academic Calendar</li>
+                    </ol>
+                </nav>
+                <h1 class="display-5 fw-bold font-heading text-white mb-2">Department & Academic Calendar</h1>
+                <p class="lead text-white-50 mb-0">
+                    Official semester schedule, internal assessment tests, hackathons, workshops, placement drives, and holidays.
+                </p>
+            </div>
+            <div class="col-lg-4 text-lg-end mt-4 mt-lg-0">
+                <span class="badge bg-primary px-3 py-2 rounded-pill font-monospace">
+                    <i class="fa-solid fa-calendar-check me-1"></i> Academic Year 2026-27
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container mb-5">
+    <div class="row g-4">
+        <!-- Main Interactive Calendar Box -->
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm rounded-4 p-4 bg-white mb-4">
+                <!-- Calendar Controls -->
+                <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3 mb-4">
+                    <div class="d-flex align-items-center gap-2">
+                        <h3 class="h4 fw-bold text-dark mb-0 font-heading" id="fullCalMonthYear">Loading...</h3>
+                        <button type="button" class="btn btn-outline-primary btn-sm rounded-pill px-3 py-1 ms-2" id="fullCalTodayBtn">
+                            Today
+                        </button>
+                    </div>
+                    <div class="d-flex align-items-center gap-2">
+                        <button type="button" class="btn btn-light border btn-sm rounded-circle p-2" id="fullCalPrevBtn" title="Previous Month">
+                            <i class="fa-solid fa-chevron-left"></i>
+                        </button>
+                        <button type="button" class="btn btn-light border btn-sm rounded-circle p-2" id="fullCalNextBtn" title="Next Month">
+                            <i class="fa-solid fa-chevron-right"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Category Filters -->
+                <div class="d-flex gap-1 overflow-x-auto pb-3 mb-3 border-bottom news-filter-pills-bar" id="fullCalFilterBar">
+                    <button type="button" class="news-tab-pill active" data-cal-category="all">All Schedules</button>
+                    <button type="button" class="news-tab-pill" data-cal-category="exam">🔴 Exams & IATs</button>
+                    <button type="button" class="news-tab-pill" data-cal-category="hackathon">🟣 Hackathons</button>
+                    <button type="button" class="news-tab-pill" data-cal-category="workshop">🔵 Workshops</button>
+                    <button type="button" class="news-tab-pill" data-cal-category="placement">🟢 Placements</button>
+                    <button type="button" class="news-tab-pill" data-cal-category="academic">🟡 Academic PDF</button>
+                    <button type="button" class="news-tab-pill" data-cal-category="holiday">🌸 Holidays</button>
+                </div>
+
+                <!-- Calendar Weekdays -->
+                <div class="calendar-weekdays-grid mb-2 text-center text-muted fw-bold small">
+                    <div>Sun</div>
+                    <div>Mon</div>
+                    <div>Tue</div>
+                    <div>Wed</div>
+                    <div>Thu</div>
+                    <div>Fri</div>
+                    <div>Sat</div>
+                </div>
+
+                <!-- Calendar Days Grid Container -->
+                <div class="calendar-days-grid" id="fullCalDaysGrid">
+                    <!-- Populated dynamically via public.js -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Side: Selected Day Schedule Details -->
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm rounded-4 p-4 bg-white sticky-top" style="top: 96px; z-index: 10;">
+                <div class="d-flex align-items-center justify-content-between mb-3 border-bottom pb-3">
+                    <div>
+                        <h5 class="fw-bold text-dark mb-0 font-heading" id="fullCalSelectedDateTitle">Select a Date</h5>
+                        <span class="small text-muted" id="fullCalSelectedDateSubtitle">Click any day with dots</span>
+                    </div>
+                    <span class="badge bg-primary-subtle text-primary rounded-pill px-2.5 py-1" id="fullCalEventsCount">0 items</span>
+                </div>
+
+                <!-- Day Schedule List -->
+                <div class="day-schedules-container" id="fullCalDayScheduleList" style="max-height: 520px; overflow-y: auto;">
+                    <div class="text-center py-5 text-muted">
+                        <i class="fa-regular fa-calendar-check fa-3x opacity-25 mb-3 d-block"></i>
+                        <p class="small mb-0">Select any highlighted date on the calendar to view scheduled assessments, events, and deadlines.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

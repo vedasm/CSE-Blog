@@ -1,0 +1,85 @@
+{% extends 'base_public.html' %}
+{% load static %}
+
+{% block title %}Computing Laboratories & Infrastructure | Department of CSE | SRM Valliammai{% endblock %}
+
+{% block content %}
+<!-- Banner -->
+<section class="bg-gradient-dark py-5 text-white position-relative overflow-hidden">
+    <div class="hero-grid-overlay"></div>
+    <div class="container py-4 position-relative z-2">
+        <div class="d-inline-flex align-items-center gap-2 px-3 py-1.5 rounded-pill hero-badge mb-3">
+            <span class="live-pulse-dot bg-info"></span>
+            <span class="small fw-semibold text-white">8 Advanced Computing Labs · Dedicated Server Cluster</span>
+        </div>
+        <h1 class="display-5 fw-extrabold mb-3 font-heading">
+            Department <span class="text-gradient-cyan">Laboratories & Facilities</span>
+        </h1>
+        <p class="lead text-light opacity-90 mb-0" style="max-width: 700px;">
+            High-performance hardware clusters, dedicated servers, AI computing systems, and specialized development environments.
+        </p>
+    </div>
+</section>
+
+<!-- Labs Grid -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="mb-4">
+            <h3 class="fw-bold font-heading text-dark mb-1 d-flex align-items-center gap-2">
+                <i class="fa-solid fa-server text-primary"></i> Specialized Computing Laboratories
+            </h3>
+            <p class="text-secondary small mb-4">6 Undergraduate laboratories and 1 Postgraduate research laboratory equipped with dedicated UPS backup and licensed software.</p>
+        </div>
+
+        <div class="row g-4 mb-5">
+            {% for lab in labs %}
+            <div class="col-md-6 col-lg-4">
+                <div class="card border-0 rounded-4 shadow-sm overflow-hidden bg-white h-100 d-flex flex-column justify-content-between">
+                    <div>
+                        {% if lab.image_url %}
+                        <div style="height: 180px; overflow: hidden;">
+                            <img src="{{ lab.image_url }}" class="w-100 h-100 object-fit-cover" alt="{{ lab.name }}">
+                        </div>
+                        {% endif %}
+                        <div class="p-4">
+                            <h5 class="fw-bold text-dark font-heading mb-2">{{ lab.name }}</h5>
+                            <p class="text-primary small fw-semibold mb-3"><i class="fa-solid fa-microchip me-1"></i> {{ lab.domain }}</p>
+
+                            <ul class="list-unstyled small text-secondary mb-0">
+                                <li class="mb-1.5"><i class="fa-solid fa-desktop me-2 text-primary"></i> <strong>Workstations:</strong> {{ lab.computers_count }} Computers</li>
+                                <li class="mb-1.5"><i class="fa-solid fa-print me-2 text-primary"></i> <strong>Printers:</strong> {{ lab.printers_count }} Units</li>
+                                <li class="mb-1.5"><i class="fa-solid fa-bolt me-2 text-warning"></i> <strong>Power Backup:</strong> {{ lab.ups_info }}</li>
+                                <li class="mb-1.5"><i class="fa-solid fa-code me-2 text-success"></i> <strong>Software:</strong> {{ lab.software_installed }}</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Department Library Showcase -->
+        <div class="card border-0 rounded-4 shadow-sm p-4 p-md-5 bg-white">
+            <div class="row align-items-center g-4">
+                <div class="col-md-8">
+                    <div class="d-flex align-items-center gap-2 mb-2">
+                        <span class="badge bg-primary bg-opacity-10 text-primary rounded-pill px-3 py-1">Department Library</span>
+                        <span class="text-muted small">724 Volumes · 112 Foreign Authored</span>
+                    </div>
+                    <h3 class="fw-bold font-heading text-dark mb-3">CSE Specialized Department Library</h3>
+                    <p class="text-secondary leading-relaxed mb-0">
+                        Available for faculty and students for ready reference. Consists of text and reference books covering Operating Systems, Computer Networks, AI & Deep Learning, Database Systems, Web Engineering, Cryptography, and Python.
+                    </p>
+                </div>
+                <div class="col-md-4 text-md-end">
+                    {% if library_doc %}
+                    <a href="{{ library_doc.download_url }}" target="_blank" class="btn btn-primary rounded-pill px-4 py-2.5 shadow-xs d-inline-flex align-items-center gap-2">
+                        <i class="fa-solid fa-file-pdf"></i> Download Book Catalogue PDF
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

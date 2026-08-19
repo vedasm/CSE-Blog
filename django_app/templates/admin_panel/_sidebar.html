@@ -1,0 +1,91 @@
+<aside class="admin-sidebar" id="adminSidebar" aria-hidden="false">
+    <div class="sidebar-header">
+        <i class="fa-solid fa-laptop-code"></i>
+        <span>CSE BLOG</span>
+    </div>
+    <ul class="nav-list">
+        <li class="nav-item">
+            <a href="{% url 'core:dashboard' %}" class="nav-link-admin {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
+                <i class="fa-solid fa-gauge"></i> Dashboard
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{% url 'blog:manage' %}" class="nav-link-admin {% if 'blog' in request.path %}active{% endif %}">
+                <i class="fa-solid fa-pen-to-square"></i> Manage Blogs
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{% url 'events:manage' %}" class="nav-link-admin {% if request.resolver_match.url_name == 'manage' and 'events' in request.path %}active{% endif %}">
+                <i class="fa-solid fa-calendar-check"></i> Manage Events
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{% url 'events:admin_schedules' %}" class="nav-link-admin {% if 'calendar' in request.path %}active{% endif %}">
+                <i class="fa-solid fa-calendar-days"></i> Academic Calendar
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{% url 'news:manage' %}" class="nav-link-admin {% if 'news' in request.path %}active{% endif %}">
+                <i class="fa-solid fa-bullhorn"></i> Latest News
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{% url 'faculty:manage' %}" class="nav-link-admin {% if 'faculty' in request.path %}active{% endif %}">
+                <i class="fa-solid fa-user-tie"></i> Faculty
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{% url 'core_admin:manage_placements' %}" class="nav-link-admin {% if 'placements' in request.path %}active{% endif %}">
+                <i class="fa-solid fa-briefcase"></i> Placements
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{% url 'core_admin:manage_documents' %}?category=research" class="nav-link-admin {% if request.GET.category == 'research' %}active{% endif %}">
+                <i class="fa-solid fa-flask-vial"></i> Research & Journals
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{% url 'core_admin:manage_documents' %}?category=achievement" class="nav-link-admin {% if request.GET.category == 'achievement' %}active{% endif %}">
+                <i class="fa-solid fa-trophy"></i> Achievements & Hackathons
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{% url 'core_admin:manage_labs' %}" class="nav-link-admin {% if 'labs' in request.path %}active{% endif %}">
+                <i class="fa-solid fa-server"></i> Labs & Infrastructure
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{% url 'core_admin:manage_documents' %}?category=alumni" class="nav-link-admin {% if request.GET.category == 'alumni' %}active{% endif %}">
+                <i class="fa-solid fa-user-graduate"></i> Alumni (SHIMMER)
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{% url 'gallery:manage' %}" class="nav-link-admin {% if 'gallery' in request.path %}active{% endif %}">
+                <i class="fa-solid fa-images"></i> Gallery
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{% url 'contact_admin:messages' %}" class="nav-link-admin {% if 'messages' in request.path %}active{% endif %}">
+                <i class="fa-solid fa-envelope"></i> Messages
+                {% if unread_messages %}
+                    <span class="badge bg-danger ms-auto">{{ unread_messages }}</span>
+                {% endif %}
+            </a>
+        </li>
+        {% if request.user.role == 'superadmin' %}
+        <li class="nav-item">
+            <a href="/django-admin/" class="nav-link-admin">
+                <i class="fa-solid fa-gear"></i> Settings
+            </a>
+        </li>
+        {% endif %}
+    </ul>
+    <div class="p-3 border-top border-secondary">
+        <form method="post" action="{% url 'accounts:logout' %}" class="m-0">
+            {% csrf_token %}
+            <button class="btn btn-link text-white text-decoration-none w-100 text-start p-2 nav-link-admin">
+                <i class="fa-solid fa-right-from-bracket"></i> Logout
+            </button>
+        </form>
+    </div>
+</aside>

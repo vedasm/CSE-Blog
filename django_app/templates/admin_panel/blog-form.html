@@ -1,0 +1,170 @@
+<div class="row justify-content-center">
+    <div class="col-lg-11">
+        <div class="card shadow-sm border-0 bg-white rounded-4 overflow-hidden mb-4">
+            <div class="card-header bg-white border-bottom p-4 d-flex justify-content-between align-items-center">
+                <div>
+                    <h4 class="fw-bold mb-1 font-heading text-dark d-flex align-items-center gap-2">
+                        <i class="fa-solid fa-file-pen text-primary"></i>
+                        {% if form.instance.pk %}Edit Article: {{ form.instance.title }}{% else %}Compose Technical Article{% endif %}
+                    </h4>
+                    <p class="text-secondary small mb-0">
+                        Create rich technical guides, student achievements, tutorials, and research articles.
+                    </p>
+                </div>
+                <a href="{% url 'blog:manage' %}" class="btn btn-outline-secondary btn-sm rounded-pill px-3">
+                    <i class="fa-solid fa-arrow-left me-1"></i> Back to Articles
+                </a>
+            </div>
+
+            <div class="card-body p-4 p-md-5">
+                {% if form.errors %}
+                <div class="alert alert-danger rounded-3 mb-4">
+                    <div class="fw-bold mb-1"><i class="fa-solid fa-triangle-exclamation me-1"></i> Please resolve the following errors:</div>
+                    <ul class="mb-0 small ps-3">
+                        {% for field, errors in form.errors.items %}
+                            {% for error in errors %}
+                            <li><strong>{{ field|title }}:</strong> {{ error }}</li>
+                            {% endfor %}
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+
+                <form method="post" enctype="multipart/form-data" novalidate>
+                    {% csrf_token %}
+                    {{ form.media }}
+
+                    <div class="row g-4">
+                        <!-- Left Main Editor Column (8 Cols) -->
+                        <div class="col-lg-8">
+                            <!-- Title -->
+                            <div class="mb-4">
+                                <label for="{{ form.title.id_for_label }}" class="form-label fw-bold text-dark">
+                                    Article Title <span class="text-danger">*</span>
+                                </label>
+                                {{ form.title }}
+                                <div class="form-text">A catchy, descriptive title for the technical blog or guide.</div>
+                            </div>
+
+                            <!-- Slug & Tags Row -->
+                            <div class="row g-3 mb-4">
+                                <div class="col-md-6">
+                                    <label for="{{ form.slug.id_for_label }}" class="form-label fw-bold text-dark">
+                                        URL Slug <span class="text-secondary small fw-normal">(Unique)</span>
+                                    </label>
+                                    {{ form.slug }}
+                                    <div class="form-text">e.g. `building-scalable-microservices`</div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="{{ form.tags.id_for_label }}" class="form-label fw-bold text-dark">
+                                        Tags & Keywords
+                                    </label>
+                                    {{ form.tags }}
+                                    <div class="form-text">Comma-separated tags (e.g. AI, Python, Docker).</div>
+                                </div>
+                            </div>
+
+                            <!-- Content / CKEditor -->
+                            <div class="mb-4">
+                                <label class="form-label fw-bold text-dark">
+                                    Article Content & Code Snippets <span class="text-danger">*</span>
+                                </label>
+                                {{ form.content }}
+                            </div>
+                        </div>
+
+                        <!-- Right Settings Column (4 Cols) -->
+                        <div class="col-lg-4">
+                            <div class="bg-light p-4 rounded-4 border">
+                                <h6 class="fw-bold text-dark mb-3 d-flex align-items-center gap-2">
+                                    <i class="fa-solid fa-sliders text-primary"></i> Publishing & Settings
+                                </h6>
+
+                                <!-- Category -->
+                                <div class="mb-3">
+                                    <label for="{{ form.category.id_for_label }}" class="form-label fw-semibold text-dark">
+                                        Category <span class="text-danger">*</span>
+                                    </label>
+                                    {{ form.category }}
+                                </div>
+
+                                <!-- Status -->
+                                <div class="mb-3">
+                                    <label for="{{ form.status.id_for_label }}" class="form-label fw-semibold text-dark">
+                                        Publication Status <span class="text-danger">*</span>
+                                    </label>
+                                    {{ form.status }}
+                                </div>
+
+                                <!-- Author -->
+                                <div class="mb-3">
+                                    <label for="{{ form.author.id_for_label }}" class="form-label fw-semibold text-dark">
+                                        Author / Contributor
+                                    </label>
+                                    {{ form.author }}
+                                </div>
+
+                                <!-- Published Date -->
+                                <div class="mb-4">
+                                    <label for="{{ form.published_at.id_for_label }}" class="form-label fw-semibold text-dark">
+                                        Published Date & Time
+                                    </label>
+                                    {{ form.published_at }}
+                                </div>
+
+                                <hr class="my-3">
+
+                                <!-- Featured Image -->
+                                <div class="mb-4">
+                                    <label for="featuredImageInput" class="form-label fw-semibold text-dark">
+                                        Featured Cover Image
+                                    </label>
+                                    {{ form.featured_image }}
+                                    <div class="form-text mb-2">Recommended: 1200×630px JPG, PNG, WEBP.</div>
+
+                                    <div class="mt-2 text-center" id="featuredImagePreviewBox">
+                                        {% if form.instance.featured_image %}
+                                        <img src="{{ form.instance.featured_image.url }}" id="featuredImgPreview" class="img-thumbnail rounded-3 w-100 object-fit-cover shadow-xs" style="max-height: 180px;" alt="Cover preview">
+                                        {% else %}
+                                        <img src="" id="featuredImgPreview" class="img-thumbnail rounded-3 w-100 object-fit-cover d-none shadow-xs" style="max-height: 180px;" alt="Cover preview">
+                                        {% endif %}
+                                    </div>
+                                </div>
+
+                                <div class="d-grid gap-2 pt-2">
+                                    <button type="submit" class="btn btn-primary rounded-pill py-2.5 fw-semibold shadow-xs">
+                                        <i class="fa-solid fa-cloud-arrow-up me-1"></i> Save Article
+                                    </button>
+                                    <a href="{% url 'blog:manage' %}" class="btn btn-outline-secondary rounded-pill py-2">
+                                        Cancel
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const fileInput = document.getElementById('featuredImageInput');
+    const previewImg = document.getElementById('featuredImgPreview');
+
+    if (fileInput && previewImg) {
+        fileInput.addEventListener('change', function (e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (event) {
+                    previewImg.src = event.target.result;
+                    previewImg.classList.remove('d-none');
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    }
+});
+</script>

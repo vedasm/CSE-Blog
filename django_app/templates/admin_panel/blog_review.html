@@ -1,0 +1,164 @@
+{% extends 'base_admin.html' %}
+{% block title %}Review Blog: {{ blog.title }} | Admin Portal{% endblock %}
+{% block page_title %}Verify Technical Article{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-10">
+        <!-- Review Action Banners -->
+        {% if blog.status == 'pending' %}
+        <div class="card shadow-sm border-0 rounded-4 p-4 mb-4 bg-white">
+            <h5 class="fw-bold font-heading text-dark mb-3"><i class="fa-solid fa-square-check text-warning me-2"></i>Review Pending Blog</h5>
+            <p class="small text-secondary mb-4">
+                Verify that this blog matches formatting criteria, does not violate guidelines, and contains quality academic/technical details.
+            </p>
+            
+            <div class="d-flex flex-wrap gap-3 align-items-center">
+                <!-- Approve Action Form -->
+                {% if request.user.role != 'viewer' %}
+                <form method="post" action="{% url 'blog:approve' blog.pk %}" class="m-0" onsubmit="return confirm('Approve this article?');">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-success rounded-pill px-4 fw-semibold">
+                        <i class="fa-solid fa-circle-check me-1"></i> Approve Blog
+                    </button>
+                </form>
+                
+                <!-- Reject Action Trigger (Collapse / Modal style) -->
+                <button class="btn btn-outline-danger rounded-pill px-4 fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#rejectFormBox" aria-expanded="false" aria-controls="rejectFormBox">
+                    <i class="fa-solid fa-circle-xmark me-1"></i> Reject...
+                </button>
+                {% endif %}
+            </div>
+
+            <!-- Reject Form Box (Collapsed) -->
+            <div class="collapse mt-4" id="rejectFormBox">
+                <div class="bg-light p-4 rounded-4 border">
+                    <h6 class="fw-bold text-dark mb-3">Rejection Feedback</h6>
+                    <form method="post" action="{% url 'blog:reject' blog.pk %}">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="rejectionReason" class="form-label fw-semibold text-dark small">Provide a reason for rejection (this will be shown to the student):</label>
+                            <textarea required name="rejection_reason" id="rejectionReason" rows="3" class="form-control" placeholder="e.g. Please refine the section on Database Indexes and correct the typos in the code snippets."></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-danger rounded-pill px-4 btn-sm fw-semibold">
+                            Submit Rejection
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {% elif blog.status == 'approved' %}
+        <div class="card shadow-sm border-0 rounded-4 p-4 mb-4 bg-white d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+            <div>
+                <h5 class="fw-bold font-heading text-info mb-1"><i class="fa-solid fa-thumbs-up me-2"></i>Approved & Pending Publication</h5>
+                <p class="small text-secondary mb-0">This article was approved and is ready to go live. Publish it to make it visible to the public.</p>
+            </div>
+            {% if request.user.role != 'viewer' %}
+            <form method="post" action="{% url 'blog:publish' blog.pk %}" class="m-0">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-primary rounded-pill px-4 fw-semibold">
+                    <i class="fa-solid fa-paper-plane me-1"></i> Publish Live
+                </button>
+            </form>
+            {% endif %}
+        </div>
+        {% elif blog.status == 'published' %}
+        <div class="card shadow-sm border-0 rounded-4 p-4 mb-4 bg-white d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+            <div>
+                <h5 class="fw-bold font-heading text-success mb-1"><i class="fa-solid fa-circle-check me-2"></i>Published & Live</h5>
+                <p class="small text-secondary mb-0">This article is currently visible to everyone on the public site.</p>
+            </div>
+            <div class="d-flex gap-2">
+                <a href="{% url 'public_blog:detail' blog.slug %}" target="_blank" class="btn btn-outline-info rounded-pill px-3 btn-sm fw-semibold">
+                    View Public Post <i class="fa-solid fa-arrow-up-right-from-square ms-1"></i>
+                </a>
+                {% if request.user.role != 'viewer' %}
+                <form method="post" action="{% url 'blog:unpublish' blog.pk %}" class="m-0" onsubmit="return confirm('Are you sure you want to unpublish this post?');">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-outline-warning rounded-pill px-3 btn-sm fw-semibold">
+                        <i class="fa-solid fa-ban me-1"></i> Unpublish Post
+                    </button>
+                </form>
+                {% endif %}
+            </div>
+        </div>
+        {% elif blog.status == 'rejected' %}
+        <div class="card shadow-sm border-0 rounded-4 p-4 mb-4 bg-white">
+            <h5 class="fw-bold font-heading text-danger mb-2"><i class="fa-solid fa-circle-xmark me-2"></i>Submission Rejected</h5>
+            <p class="small text-secondary mb-0">This article was rejected. The student will be able to edit and resubmit it.</p>
+            {% if blog.rejection_reason %}
+            <div class="mt-3 bg-light p-3 rounded-3 border small text-dark">
+                <strong>Rejection Feedback:</strong> {{ blog.rejection_reason }}
+            </div>
+            {% endif %}
+        </div>
+        {% else %}
+        <div class="card shadow-sm border-0 rounded-4 p-4 mb-4 bg-white">
+            <h5 class="fw-bold font-heading text-secondary mb-0"><i class="fa-solid fa-floppy-disk me-2"></i>Article Draft</h5>
+            <p class="small text-secondary mb-0 mt-1">This blog is currently in a draft state and has not been submitted by the student.</p>
+        </div>
+        {% endif %}
+
+        <!-- Blog Document Layout -->
+        <article class="card shadow-sm border-0 rounded-4 overflow-hidden bg-white mb-4">
+            {% if blog.featured_image %}
+            <img src="{{ blog.featured_image.url }}" class="w-100 object-fit-cover" style="max-height: 400px;" alt="{{ blog.title }}">
+            {% endif %}
+            
+            <div class="card-body p-4 p-md-5">
+                <div class="d-flex flex-wrap align-items-center gap-3 mb-3">
+                    {% if blog.category %}
+                    <span class="badge bg-primary rounded-pill px-3 py-1.5" style="font-size: 0.8rem;">
+                        {{ blog.category.name }}
+                    </span>
+                    {% endif %}
+                    <span class="text-secondary small">
+                        <i class="fa-regular fa-calendar-days me-1"></i>Created: {{ blog.created_at|date:'d M Y H:i' }}
+                    </span>
+                    <span class="text-secondary small">
+                        <i class="fa-regular fa-clock me-1"></i>Updated: {{ blog.updated_at|date:'d M Y H:i' }}
+                    </span>
+                    {% if blog.published_at %}
+                    <span class="text-secondary small">
+                        <i class="fa-solid fa-globe me-1"></i>Published: {{ blog.published_at|date:'d M Y H:i' }}
+                    </span>
+                    {% endif %}
+                </div>
+                
+                <h1 class="fw-bold font-heading text-dark mb-4" style="font-size: 2.25rem;">{{ blog.title }}</h1>
+                
+                <!-- Author block -->
+                <div class="d-flex align-items-center gap-3 mb-4 pb-4 border-bottom">
+                    <img src="https://ui-avatars.com/api/?name={{ blog.author.email|urlencode }}&background=365ACA&color=fff&size=80" class="rounded-circle shadow-xs" width="48" height="48" alt="Author Avatar">
+                    <div>
+                        <div class="fw-bold text-dark mb-0.5">{{ blog.author.get_full_name|default:blog.author.email }}</div>
+                        <div class="text-secondary small">Student Author ({{ blog.author.email }})</div>
+                    </div>
+                </div>
+                
+                <!-- Main Content -->
+                <div class="blog-details-content text-dark lh-lg" style="font-size: 1.1rem;">
+                    {{ blog.content|safe }}
+                </div>
+                
+                {% if blog.tags %}
+                <div class="mt-5 pt-4 border-top">
+                    <h6 class="fw-bold text-secondary mb-2">Tags:</h6>
+                    <div class="d-flex flex-wrap gap-2">
+                        {% for tag in blog.tags.split %}
+                        <span class="badge bg-light text-secondary border rounded-pill px-2.5 py-1.5" style="font-size: 0.78rem;">#{{ tag|cut:',' }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </article>
+        
+        <div class="text-center pt-2 mb-5">
+            <a href="{% url 'blog:manage' %}" class="btn btn-outline-secondary rounded-pill px-4">
+                <i class="fa-solid fa-arrow-left me-1"></i> Back to Manage Blogs
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

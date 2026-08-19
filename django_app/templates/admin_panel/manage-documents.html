@@ -1,0 +1,140 @@
+{% extends 'base_admin.html' %}
+{% block page_title %}Department Documents & PDF Archives{% endblock %}
+
+{% block content %}
+<!-- Top Header & Filter Bar -->
+<div class="card shadow-sm border-0 p-4 mb-4 bg-white rounded-4">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+        <div>
+            <h4 class="fw-bold mb-1 font-heading text-dark d-flex align-items-center gap-2">
+                <i class="fa-solid fa-folder-open text-primary"></i> Official Department Documents & PDFs
+            </h4>
+            <p class="text-secondary small mb-0">
+                Manage research publication lists, student achievement archives, event records, laboratory profiles, and library catalogues.
+            </p>
+        </div>
+        {% if request.user.role != 'viewer' %}
+        <div class="d-flex align-items-center gap-2">
+            <a href="{% url 'core_admin:add_document' %}" class="btn btn-primary rounded-pill px-3.5 py-2 shadow-xs d-flex align-items-center gap-2">
+                <i class="fa-solid fa-plus"></i> Upload Document
+            </a>
+        </div>
+        {% endif %}
+    </div>
+
+    <hr class="my-3 opacity-10">
+
+    <!-- Filters Bar -->
+    <form method="get" class="row g-2 align-items-center">
+        <div class="col-md-6">
+            <div class="input-group">
+                <span class="input-group-text bg-light border-end-0 text-muted">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </span>
+                <input type="text" name="search" class="form-control border-start-0 bg-light" placeholder="Search by title, academic year, or description..." value="{{ request.GET.search }}">
+            </div>
+        </div>
+        <div class="col-md-4">
+            <select name="category" class="form-select bg-light" onchange="this.form.submit()">
+                <option value="">All Categories</option>
+                {% for code, label in categories %}
+                <option value="{{ code }}" {% if request.GET.category == code %}selected{% endif %}>{{ label }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-2 d-flex gap-2">
+            <button type="submit" class="btn btn-primary w-100 rounded-3">Filter</button>
+            {% if request.GET.search or request.GET.category %}
+            <a href="{% url 'core_admin:manage_documents' %}" class="btn btn-outline-secondary rounded-3" title="Clear Filters">
+                <i class="fa-solid fa-xmark"></i>
+            </a>
+            {% endif %}
+        </div>
+    </form>
+</div>
+
+<!-- Documents Table -->
+<div class="card shadow-sm border-0 p-0 bg-white rounded-4 overflow-hidden mb-4">
+    <div class="table-responsive">
+        <table class="table table-modern align-middle mb-0">
+            <thead>
+                <tr>
+                    <th style="width: 45%;">Document Title</th>
+                    <th>Category</th>
+                    <th>Academic Year</th>
+                    <th>File / Link</th>
+                    <th>Status</th>
+                    <th class="text-end">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for doc in documents %}
+                <tr>
+                    <td>
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="rounded-3 bg-danger bg-opacity-10 text-danger d-flex align-items-center justify-content-center" style="width: 44px; height: 44px;">
+                                <i class="fa-solid fa-file-pdf fa-lg"></i>
+                            </div>
+                            <div>
+                                <div class="fw-bold text-dark">{{ doc.title }}</div>
+                                <div class="text-muted small text-truncate max-w-400">{{ doc.description|truncatewords:8 }}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <span class="badge bg-light text-primary border rounded-pill px-2.5 py-1" style="font-size: 0.76rem;">
+                            {{ doc.get_category_display }}
+                        </span>
+                    </td>
+                    <td>
+                        <span class="small fw-semibold text-dark">{{ doc.academic_year|default:'—' }}</span>
+                    </td>
+                    <td>
+                        <a href="{{ doc.download_url }}" target="_blank" class="btn btn-outline-danger btn-sm rounded-pill px-2.5 py-0.5 d-inline-flex align-items-center gap-1.5" style="font-size: 0.76rem;">
+                            <i class="fa-solid fa-arrow-down-to-line"></i> View PDF
+                        </a>
+                    </td>
+                    <td>
+                        {% if doc.is_published %}
+                        <span class="badge bg-success-subtle text-success rounded-pill px-2.5 py-1" style="font-size: 0.72rem;">Published</span>
+                        {% else %}
+                        <span class="badge bg-secondary-subtle text-secondary rounded-pill px-2.5 py-1" style="font-size: 0.72rem;">Draft</span>
+                        {% endif %}
+                    </td>
+                    <td class="text-end">
+                        <div class="d-inline-flex gap-1">
+                            {% if request.user.role != 'viewer' %}
+                            <a class="btn btn-outline-warning btn-sm rounded-circle p-1.5" href="{% url 'core_admin:edit_document' doc.pk %}" title="Edit Document">
+                                <i class="fa-solid fa-pen-to-square"></i>
+                            </a>
+                            <form class="d-inline m-0" method="post" action="{% url 'core_admin:delete_document' doc.pk %}" onsubmit="return confirm('Are you sure you want to delete this document?');">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-outline-danger btn-sm rounded-circle p-1.5" title="Delete Document">
+                                    <i class="fa-solid fa-trash"></i>
+                                </button>
+                            </form>
+                            {% endif %}
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" class="text-center py-5 text-muted">
+                        <i class="fa-solid fa-folder-open fa-3x opacity-25 mb-3 d-block"></i>
+                        <h5>No department documents found</h5>
+                        <p class="small text-secondary mb-3">Upload research lists, achievement archives, or laboratory brochures.</p>
+                        {% if request.user.role != 'viewer' %}
+                        <a href="{% url 'core_admin:add_document' %}" class="btn btn-primary btn-sm rounded-pill px-3">
+                            <i class="fa-solid fa-plus me-1"></i> Upload First Document
+                        </a>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% include 'public/_pagination.html' with page_obj=page_obj %}
+{% endblock %}

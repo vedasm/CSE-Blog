@@ -1,0 +1,155 @@
+{% extends 'base_public.html' %}
+{% load static %}
+
+{% block title %}Placements & Career Records | Department of CSE | SRM Valliammai{% endblock %}
+
+{% block content %}
+<!-- Banner -->
+<section class="bg-gradient-dark py-5 text-white position-relative overflow-hidden">
+    <div class="hero-grid-overlay"></div>
+    <div class="container py-4 position-relative z-2">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <div class="d-inline-flex align-items-center gap-2 px-3 py-1.5 rounded-pill hero-badge mb-3">
+                    <span class="live-pulse-dot bg-success"></span>
+                    <span class="small fw-semibold text-white">Tier-1 Corporate Placements · 98.4% Success Record</span>
+                </div>
+                <h1 class="display-5 fw-extrabold mb-3 font-heading">
+                    Placement Track Record & <span class="text-gradient-cyan">Career Guidance</span>
+                </h1>
+                <p class="lead text-light opacity-90 mb-0" style="max-width: 650px;">
+                    A dedicated full-time placement wing preparing CSE engineers for high-impact careers in global tech leaders including Zoho, TCS, Infosys, Cognizant, and Accenture.
+                </p>
+            </div>
+            <div class="col-lg-4 text-lg-end mt-4 mt-lg-0">
+                <div class="card bg-white bg-opacity-10 border border-white border-opacity-15 rounded-4 p-4 text-center backdrop-blur shadow-lg">
+                    <div class="h1 fw-extrabold text-warning mb-0 font-heading">149</div>
+                    <div class="small fw-semibold text-white">Students Placed (2023 Batch)</div>
+                    <div class="text-white-50 mt-2 small">800+ Total Placed Across 9 Batches</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Placement Milestones Metric Grid -->
+<section class="py-5 bg-light border-bottom">
+    <div class="container">
+        <div class="row g-3">
+            <div class="col-6 col-md-3">
+                <div class="card border-0 rounded-4 shadow-sm p-4 text-center bg-white h-100">
+                    <div class="h2 fw-extrabold text-primary mb-1 font-heading">98.4%</div>
+                    <div class="small text-secondary fw-semibold">Placement Rate</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="card border-0 rounded-4 shadow-sm p-4 text-center bg-white h-100">
+                    <div class="h2 fw-extrabold text-success mb-1 font-heading">12 LPA</div>
+                    <div class="small text-secondary fw-semibold">Highest CTC Package</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="card border-0 rounded-4 shadow-sm p-4 text-center bg-white h-100">
+                    <div class="h2 fw-extrabold text-warning mb-1 font-heading">4.5 LPA</div>
+                    <div class="small text-secondary fw-semibold">Average Package</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="card border-0 rounded-4 shadow-sm p-4 text-center bg-white h-100">
+                    <div class="h2 fw-extrabold text-info mb-1 font-heading">45+</div>
+                    <div class="small text-secondary fw-semibold">Recruiting Companies</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Year-by-Year Placement Growth Section -->
+<section class="py-5 bg-white">
+    <div class="container">
+        <div class="row g-5 align-items-center mb-5">
+            <div class="col-lg-6">
+                <div class="mb-4">
+                    <span class="badge bg-primary bg-opacity-10 text-primary rounded-pill px-3 py-1 mb-2">Historical Records</span>
+                    <h2 class="fw-bold font-heading text-dark">Placement Details (2015 – 2023)</h2>
+                    <p class="text-secondary leading-relaxed">
+                        The department has witnessed phenomenal year-on-year growth in campus placements, growing from 48 students placed in 2015 to a record 149 students placed in 2023.
+                    </p>
+                </div>
+
+                <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+                    <div class="table-responsive">
+                        <table class="table table-modern align-middle mb-0 text-center">
+                            <thead>
+                                <tr>
+                                    <th>S.No</th>
+                                    <th>Academic Year</th>
+                                    <th>Students Placed</th>
+                                    <th>Top Recruiters</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in placement_records %}
+                                <tr>
+                                    <td class="text-muted small">{{ forloop.counter }}</td>
+                                    <td><span class="fw-bold text-dark">{{ item.year }}</span></td>
+                                    <td>
+                                        <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-3 py-1 fw-bold">
+                                            {{ item.students_placed }} Students
+                                        </span>
+                                    </td>
+                                    <td class="text-muted small text-start">{{ item.top_recruiters|truncatechars:35 }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Visual Placement Growth Bar Chart -->
+            <div class="col-lg-6">
+                <div class="card border-0 shadow-sm rounded-4 p-4 p-md-5 bg-light">
+                    <h5 class="fw-bold font-heading text-dark mb-4 d-flex align-items-center gap-2">
+                        <i class="fa-solid fa-chart-column text-primary"></i> Year-on-Year Placement Trajectory
+                    </h5>
+
+                    <div class="d-flex flex-column gap-3">
+                        {% for item in placement_records %}
+                        <div>
+                            <div class="d-flex justify-content-between align-items-center mb-1 small fw-semibold">
+                                <span class="text-dark">{{ item.year }}</span>
+                                <span class="text-primary">{{ item.students_placed }} Students</span>
+                            </div>
+                            <div class="progress rounded-pill" style="height: 12px; background: rgba(54, 90, 202, 0.1);">
+                                <div class="progress-bar bg-gradient-primary rounded-pill" role="progressbar" style="width: {% widthratio item.students_placed 150 100 %}%;" aria-valuenow="{{ item.students_placed }}" aria-valuemin="0" aria-valuemax="150"></div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Premier Recruiters Wall -->
+        <div class="card border-0 rounded-4 shadow-sm p-4 p-md-5 bg-light text-center">
+            <h4 class="fw-bold font-heading text-dark mb-2">Our Premier Recruiting Partners</h4>
+            <p class="text-secondary small mb-4">Leading multinational technology companies regularly hiring SRM VEC CSE graduates</p>
+
+            <div class="d-flex flex-wrap justify-content-center align-items-center gap-3">
+                <div class="p-3 bg-white rounded-3 shadow-xs fw-bold text-dark border px-4">TCS</div>
+                <div class="p-3 bg-white rounded-3 shadow-xs fw-bold text-dark border px-4">Cognizant (CTS)</div>
+                <div class="p-3 bg-white rounded-3 shadow-xs fw-bold text-dark border px-4">Wipro</div>
+                <div class="p-3 bg-white rounded-3 shadow-xs fw-bold text-dark border px-4">Infosys</div>
+                <div class="p-3 bg-white rounded-3 shadow-xs fw-bold text-primary border px-4">Zoho Corporation</div>
+                <div class="p-3 bg-white rounded-3 shadow-xs fw-bold text-dark border px-4">Accenture</div>
+                <div class="p-3 bg-white rounded-3 shadow-xs fw-bold text-dark border px-4">HCL Technologies</div>
+                <div class="p-3 bg-white rounded-3 shadow-xs fw-bold text-dark border px-4">Mindtree</div>
+                <div class="p-3 bg-white rounded-3 shadow-xs fw-bold text-dark border px-4">Tech Mahindra</div>
+                <div class="p-3 bg-white rounded-3 shadow-xs fw-bold text-dark border px-4">Capgemini</div>
+                <div class="p-3 bg-white rounded-3 shadow-xs fw-bold text-dark border px-4">DXC Technology</div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

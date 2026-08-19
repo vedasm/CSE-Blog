@@ -1,0 +1,927 @@
+{% extends 'base_public.html' %}
+{% load static %}
+
+{% block title %}CSE Department Portal | SRM Valliammai Engineering College{% endblock %}
+
+{% block content %}
+<!-- ==================== TECH CYBER HERO SECTION ==================== -->
+<section class="hero position-relative overflow-hidden">
+    <div class="hero-parallax-bg" id="heroBg"></div>
+    <div class="hero-grid-overlay"></div>
+    <canvas class="hero-canvas" id="heroCanvas" aria-hidden="true"></canvas>
+
+    <div class="container py-4 position-relative z-2">
+        <div class="row align-items-center g-5">
+            <!-- Left Hero Text & Metrics (6-7 Cols) -->
+            <div class="col-lg-7 text-center text-lg-start">
+                <div class="d-inline-flex align-items-center gap-2 px-3 py-1.5 rounded-pill hero-badge mb-3">
+                    <span class="live-pulse-dot bg-warning"></span>
+                    <span class="small fw-semibold text-white">SRM Valliammai Engineering College · Autonomous · NAAC 'A'</span>
+                </div>
+
+                <h1 class="hero-title display-4 fw-extrabold mb-3 text-white">
+                    Department of <br>
+                    <span class="text-gradient-cyan">Computer Science</span> & Engineering
+                </h1>
+
+                <p class="lead text-light opacity-90 mb-4" style="max-width: 620px; font-size: 1.15rem; line-height: 1.6;">
+                    Where algorithmic precision meets transformative technology. Advancing AI research, high-performance computing, competitive software engineering, and industry innovation.
+                </p>
+
+                <!-- Interactive Tech Domain Floating Pills -->
+                <div class="d-flex flex-wrap gap-2 mb-4 justify-content-center justify-content-lg-start">
+                    <span class="tech-pill"><i class="fa-solid fa-brain me-1 text-info"></i> AI & Deep Learning</span>
+                    <span class="tech-pill"><i class="fa-solid fa-cloud me-1 text-primary"></i> Cloud & DevOps</span>
+                    <span class="tech-pill"><i class="fa-solid fa-shield-halved me-1 text-danger"></i> Cyber Security</span>
+                    <span class="tech-pill"><i class="fa-solid fa-code me-1 text-warning"></i> DSA & Contests</span>
+                    <span class="tech-pill"><i class="fa-solid fa-cubes me-1 text-success"></i> Web3 & Systems</span>
+                </div>
+
+                <!-- Action CTAs -->
+                <div class="d-flex flex-wrap gap-3 mb-4.5 justify-content-center justify-content-lg-start">
+                    <a href="{% url 'public_blog:list' %}" class="btn btn-warning btn-lg px-4 py-2.5 rounded-pill fw-semibold shadow-lg btn-glow d-inline-flex align-items-center gap-2">
+                        <i class="fa-solid fa-book-open-reader"></i> Explore Tech Blogs
+                    </a>
+                    <a href="#departmentCalendarSection" class="btn btn-outline-light btn-lg px-4 py-2.5 rounded-pill fw-semibold backdrop-blur d-inline-flex align-items-center gap-2">
+                        <i class="fa-solid fa-calendar-days text-primary"></i> Academic Calendar
+                    </a>
+                    <a href="#newsSection" class="btn btn-outline-light btn-lg px-3.5 py-2.5 rounded-pill fw-semibold backdrop-blur d-inline-flex align-items-center gap-2">
+                        <i class="fa-solid fa-bullhorn text-warning"></i> News Board
+                    </a>
+                </div>
+
+                <!-- Live Key Milestones Bar -->
+                <div class="row g-2 pt-3 border-top border-white border-opacity-10 text-start">
+                    <div class="col-6 col-sm-3">
+                        <div class="hero-metric-box">
+                            <div class="fw-extrabold text-white h4 mb-0 font-heading">25+</div>
+                            <div class="text-white-50 small" style="font-size: 0.76rem;">Years Excellence</div>
+                        </div>
+                    </div>
+                    <div class="col-6 col-sm-3">
+                        <div class="hero-metric-box">
+                            <div class="fw-extrabold text-info h4 mb-0 font-heading">149+</div>
+                            <div class="text-white-50 small" style="font-size: 0.76rem;">Placements ('23)</div>
+                        </div>
+                    </div>
+                    <div class="col-6 col-sm-3">
+                        <div class="hero-metric-box">
+                            <div class="fw-extrabold text-warning h4 mb-0 font-heading">8</div>
+                            <div class="text-white-50 small" style="font-size: 0.76rem;">Computing Labs</div>
+                        </div>
+                    </div>
+                    <div class="col-6 col-sm-3">
+                        <div class="hero-metric-box">
+                            <div class="fw-extrabold text-success h4 mb-0 font-heading">100+</div>
+                            <div class="text-white-50 small" style="font-size: 0.76rem;">Research Papers</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Interactive Cyber Code IDE (5-6 Cols) -->
+            <div class="col-lg-5">
+                <div class="cyber-ide-card">
+                    <!-- Top Window Titlebar -->
+                    <div class="ide-top-bar d-flex justify-content-between align-items-center">
+                        <div class="d-flex align-items-center gap-1.5">
+                            <span class="ide-dot ide-dot-red"></span>
+                            <span class="ide-dot ide-dot-yellow"></span>
+                            <span class="ide-dot ide-dot-green"></span>
+                        </div>
+                        <div class="small text-white-50 font-monospace" style="font-size: 0.75rem;">
+                            <i class="fa-solid fa-code-branch text-info me-1"></i> main · vec-cse-engine
+                        </div>
+                        <div class="d-flex align-items-center gap-2">
+                            <span class="badge bg-success bg-opacity-25 text-success border border-success border-opacity-25 rounded-pill" style="font-size: 0.65rem;">
+                                ● ONLINE
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Interactive IDE Tabs -->
+                    <div class="ide-tabs-bar" id="ideTabsBar">
+                        <button type="button" class="ide-tab-btn active" data-tab="code">
+                            <i class="fa-brands fa-python text-warning"></i> neural_network.py
+                        </button>
+                        <button type="button" class="ide-tab-btn" data-tab="terminal">
+                            <i class="fa-solid fa-terminal text-info"></i> bash terminal
+                        </button>
+                        <button type="button" class="ide-tab-btn" data-tab="specs">
+                            <i class="fa-solid fa-gear text-secondary"></i> dept_specs.json
+                        </button>
+                    </div>
+
+                    <!-- Tab 1: Python Code -->
+                    <div class="ide-code-viewport" id="tabContentCode">
+                        <div class="code-line"><span class="line-num">1</span><span><span class="code-kw">import</span> <span class="code-var">torch</span>, <span class="code-var">nn</span>, <span class="code-var">transformers</span></span></div>
+                        <div class="code-line"><span class="line-num">2</span><span><span class="code-kw">from</span> <span class="code-var">valliammai.cse</span> <span class="code-kw">import</span> <span class="code-fn">DepartmentEngine</span></span></div>
+                        <div class="code-line"><span class="line-num">3</span><span></span></div>
+                        <div class="code-line"><span class="line-num">4</span><span><span class="code-comm"># Initialize Student Innovation Cluster</span></span></div>
+                        <div class="code-line"><span class="line-num">5</span><span><span class="code-kw">class</span> <span class="code-fn">CSEInnovator</span>(<span class="code-var">nn.Module</span>):</span></div>
+                        <div class="code-line"><span class="line-num">6</span><span>    <span class="code-kw">def</span> <span class="code-fn">__init__</span>(<span class="code-var">self</span>):</span></div>
+                        <div class="code-line"><span class="line-num">7</span><span>        <span class="code-var">self</span>.<span class="code-var">skills</span> = [<span class="code-str">"AI/ML"</span>, <span class="code-str">"Cloud"</span>, <span class="code-str">"CyberSec"</span>]</span></div>
+                        <div class="code-line"><span class="line-num">8</span><span>        <span class="code-var">self</span>.<span class="code-var">placement_rate</span> = <span class="code-num">0.98</span></span></div>
+                        <div class="code-line"><span class="line-num">9</span><span>        <span class="code-var">self</span>.<span class="code-var">autonomous</span> = <span class="code-bool">True</span></span></div>
+                        <div class="code-line"><span class="line-num">10</span><span></span></div>
+                        <div class="code-line"><span class="line-num">11</span><span>    <span class="code-kw">def</span> <span class="code-fn">deploy</span>(<span class="code-var">self</span>, <span class="code-var">student_id</span>):</span></div>
+                        <div class="code-line"><span class="line-num">12</span><span>        <span class="code-kw">return</span> <span class="code-fn">f</span><span class="code-str">"Ready for Tier-1 Tech: {student_id}"</span></span></div>
+                        <div class="code-line"><span class="line-num">13</span><span></span></div>
+                        <div class="code-line"><span class="line-num">14</span><span><span class="code-var">engine</span> = <span class="code-fn">DepartmentEngine</span>(<span class="code-str">"SRM Valliammai CSE"</span>)</span></div>
+                        <div class="code-line"><span class="line-num">15</span><span><span class="code-var">engine</span>.<span class="code-fn">train</span>(<span class="code-var">epochs</span>=<span class="code-num">2026</span>)  <span class="code-comm"># 100% Accuracy</span></span></div>
+                    </div>
+
+                    <!-- Tab 2: Terminal Output -->
+                    <div class="ide-terminal-viewport d-none" id="tabContentTerminal">
+                        <div class="text-white-50 small mb-1">$ cse-build --target=academic-year-2026</div>
+                        <div>[OK] PostgreSQL 16 & Redis Container active</div>
+                        <div>[OK] AI Research Lab GPU Nodes: 8x RTX 4090 Online</div>
+                        <div>[SYNC] Academic Calendar synced: 6 upcoming events</div>
+                        <div class="text-warning">[LIVE] SIH 2026 Hackathon Screening Registered</div>
+                        <div class="text-info">[PLACEMENT] Zoho, TCS, Cognizant Drives Scheduled</div>
+                        <div class="text-success mt-2">✨ All CSE Department systems operating at 100% efficiency.</div>
+                    </div>
+
+                    <!-- Tab 3: Specs JSON -->
+                    <div class="ide-code-viewport d-none" id="tabContentSpecs">
+                        <div class="code-line"><span class="line-num">1</span><span>{</span></div>
+                        <div class="code-line"><span class="line-num">2</span><span>  <span class="code-str">"department"</span>: <span class="code-str">"Computer Science & Engineering"</span>,</span></div>
+                        <div class="code-line"><span class="line-num">3</span><span>  <span class="code-str">"institution"</span>: <span class="code-str">"SRM Valliammai Engineering College"</span>,</span></div>
+                        <div class="code-line"><span class="line-num">4</span><span>  <span class="code-str">"affiliation"</span>: <span class="code-str">"Anna University (Autonomous)"</span>,</span></div>
+                        <div class="code-line"><span class="line-num">5</span><span>  <span class="code-str">"accreditation"</span>: <span class="code-str">"NAAC 'A' Grade · NBA Accredited"</span>,</span></div>
+                        <div class="code-line"><span class="line-num">6</span><span>  <span class="code-str">"placement_percentage"</span>: <span class="code-num">98.4</span>,</span></div>
+                        <div class="code-line"><span class="line-num">7</span><span>  <span class="code-str">"laboratories"</span>: <span class="code-num">8</span>,</span></div>
+                        <div class="code-line"><span class="line-num">8</span><span>  <span class="code-str">"established"</span>: <span class="code-num">1999</span></span></div>
+                        <div class="code-line"><span class="line-num">9</span><span>}</span></div>
+                    </div>
+
+                    <!-- Bottom IDE Status Bar -->
+                    <div class="ide-bottom-status d-flex justify-content-between align-items-center">
+                        <div class="d-flex align-items-center gap-3">
+                            <span><i class="fa-solid fa-circle-check text-success me-1"></i> Tests 11/11 Passed</span>
+                            <span>UTF-8</span>
+                        </div>
+                        <div>Python 3.12 · PyTorch 2.3</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ==================== CONTINUOUS TECH MARQUEE TICKER ==================== -->
+<div class="tech-marquee-bar">
+    <div class="tech-marquee-track">
+        <div class="tech-marquee-item"><i class="fa-brands fa-python text-warning"></i> Python 3.12</div>
+        <div class="tech-marquee-item"><i class="fa-solid fa-brain text-info"></i> PyTorch & Deep Learning</div>
+        <div class="tech-marquee-item"><i class="fa-brands fa-docker text-primary"></i> Docker & Kubernetes</div>
+        <div class="tech-marquee-item"><i class="fa-solid fa-shield-halved text-danger"></i> Ethical Hacking & Kali</div>
+        <div class="tech-marquee-item"><i class="fa-brands fa-react text-info"></i> React & Next.js</div>
+        <div class="tech-marquee-item"><i class="fa-solid fa-cubes text-success"></i> Web3 & Smart Contracts</div>
+        <div class="tech-marquee-item"><i class="fa-solid fa-robot text-warning"></i> Generative AI & LLMs</div>
+        <div class="tech-marquee-item"><i class="fa-solid fa-code text-primary"></i> Data Structures & Algorithms</div>
+        <div class="tech-marquee-item"><i class="fa-solid fa-database text-info"></i> PostgreSQL 16 & Redis</div>
+
+        <!-- Duplicated for seamless continuous scroll loop -->
+        <div class="tech-marquee-item"><i class="fa-brands fa-python text-warning"></i> Python 3.12</div>
+        <div class="tech-marquee-item"><i class="fa-solid fa-brain text-info"></i> PyTorch & Deep Learning</div>
+        <div class="tech-marquee-item"><i class="fa-brands fa-docker text-primary"></i> Docker & Kubernetes</div>
+        <div class="tech-marquee-item"><i class="fa-solid fa-shield-halved text-danger"></i> Ethical Hacking & Kali</div>
+        <div class="tech-marquee-item"><i class="fa-brands fa-react text-info"></i> React & Next.js</div>
+        <div class="tech-marquee-item"><i class="fa-solid fa-cubes text-success"></i> Web3 & Smart Contracts</div>
+        <div class="tech-marquee-item"><i class="fa-solid fa-robot text-warning"></i> Generative AI & LLMs</div>
+        <div class="tech-marquee-item"><i class="fa-solid fa-code text-primary"></i> Data Structures & Algorithms</div>
+        <div class="tech-marquee-item"><i class="fa-solid fa-database text-info"></i> PostgreSQL 16 & Redis</div>
+    </div>
+</div>
+
+<!-- ==================== MAIN SPLIT SECTION: CONTENT + NEWS ==================== -->
+<section class="container py-5" id="newsSection">
+    <div class="row g-4 g-xl-5">
+
+        <!-- ================= LEFT COLUMN: SPOTLIGHT, HUB & BLOGS (7 Cols) ================= -->
+        <div class="col-lg-7 col-xl-8">
+
+            <!-- 1. FEATURED ARTICLE SPOTLIGHT -->
+            <div class="mb-5">
+                <div class="d-flex align-items-center justify-content-between mb-4">
+                    <h2 class="h3 fw-bold text-dark d-flex align-items-center gap-2 mb-0">
+                        <i class="fa-solid fa-star text-warning"></i> Featured Technical Story
+                    </h2>
+                    <a href="{% url 'public_blog:list' %}" class="small text-primary text-decoration-none fw-semibold">
+                        View All Articles <i class="fa-solid fa-arrow-right ms-1"></i>
+                    </a>
+                </div>
+
+                {% if featured_blog %}
+                <div class="card featured-card border-0 rounded-4 overflow-hidden shadow-sm">
+                    <div class="row g-0 align-items-stretch">
+                        <div class="col-md-5 position-relative overflow-hidden featured-img-box">
+                            {% if featured_blog.featured_image %}
+                                <img src="{{ featured_blog.featured_image.url }}" class="w-100 h-100 object-fit-cover featured-img" alt="{{ featured_blog.title }}">
+                            {% else %}
+                                <div class="w-100 h-100 bg-gradient-primary d-flex align-items-center justify-content-center text-white">
+                                    <i class="fa-solid fa-code fa-4x opacity-50"></i>
+                                </div>
+                            {% endif %}
+                            <span class="badge bg-primary position-absolute top-3 start-3 rounded-pill px-3 py-1 shadow-xs">
+                                {{ featured_blog.category.name|default:'Featured' }}
+                            </span>
+                        </div>
+                        <div class="col-md-7 d-flex flex-column justify-content-between p-4 p-lg-5 bg-white">
+                            <div>
+                                <div class="text-muted small mb-2 d-flex align-items-center gap-2">
+                                    <span><i class="fa-regular fa-calendar me-1"></i>{{ featured_blog.published_at|date:'d M Y' }}</span>
+                                    <span>·</span>
+                                    <span><i class="fa-regular fa-eye me-1"></i>{{ featured_blog.views_count }} views</span>
+                                </div>
+                                <h3 class="h4 fw-bold text-dark mb-3">
+                                    <a href="{% url 'public_blog:detail' featured_blog.slug %}" class="text-decoration-none text-dark hover-primary">
+                                        {{ featured_blog.title }}
+                                    </a>
+                                </h3>
+                                <p class="text-secondary leading-relaxed mb-4">
+                                    {{ featured_blog.content|striptags|truncatewords:28 }}
+                                </p>
+                            </div>
+                            <div class="d-flex align-items-center justify-content-between pt-3 border-top">
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="avatar-sm bg-primary text-white rounded-circle d-flex align-items-center justify-content-center fw-bold">
+                                        <i class="fa-solid fa-user-pen" style="font-size: 0.8rem;"></i>
+                                    </div>
+                                    <span class="small fw-semibold text-secondary">{{ featured_blog.author.get_full_name|default:featured_blog.author.email }}</span>
+                                </div>
+                                <a href="{% url 'public_blog:detail' featured_blog.slug %}" class="btn btn-sm btn-primary rounded-pill px-3">
+                                    Read Article <i class="fa-solid fa-arrow-right ms-1"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% else %}
+                <div class="card p-4 text-center border-0 bg-light rounded-4">
+                    <p class="text-muted mb-0">Featured story spotlight will be updated soon.</p>
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- 2. STUDENT QUICK-ACCESS HUB -->
+            <div class="mb-5">
+                <h3 class="h4 fw-bold text-dark mb-4 d-flex align-items-center gap-2">
+                    <i class="fa-solid fa-graduation-cap text-primary"></i> Student Quick Hub
+                </h3>
+                <div class="row g-3">
+                    <div class="col-sm-6 col-md-6">
+                        <div class="card hub-card p-3.5 border-0 rounded-4 shadow-xs h-100">
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="hub-icon bg-primary bg-opacity-10 text-primary">
+                                    <i class="fa-solid fa-book-bookmark"></i>
+                                </div>
+                                <div>
+                                    <h6 class="fw-bold mb-0 text-dark">Syllabus & Regulations</h6>
+                                    <span class="small text-muted">Anna Univ / Autonomous 2026</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-md-6">
+                        <a href="{% url 'public_news:list' %}?category=placement" class="text-decoration-none">
+                            <div class="card hub-card p-3.5 border-0 rounded-4 shadow-xs h-100">
+                                <div class="d-flex align-items-center gap-3">
+                                    <div class="hub-icon bg-success bg-opacity-10 text-success">
+                                        <i class="fa-solid fa-briefcase"></i>
+                                    </div>
+                                    <div>
+                                        <h6 class="fw-bold mb-0 text-dark">Placement & Internships</h6>
+                                        <span class="small text-muted">Drives, Eligibility & Training</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-sm-6 col-md-6">
+                        <a href="{% url 'public_events:list' %}" class="text-decoration-none">
+                            <div class="card hub-card p-3.5 border-0 rounded-4 shadow-xs h-100">
+                                <div class="d-flex align-items-center gap-3">
+                                    <div class="hub-icon bg-warning bg-opacity-10 text-warning">
+                                        <i class="fa-solid fa-trophy"></i>
+                                    </div>
+                                    <div>
+                                        <h6 class="fw-bold mb-0 text-dark">Coding & Hackathon Club</h6>
+                                        <span class="small text-muted">Internal Contests & Wins</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-sm-6 col-md-6">
+                        <a href="#departmentCalendarSection" class="text-decoration-none">
+                            <div class="card hub-card p-3.5 border-0 rounded-4 shadow-xs h-100">
+                                <div class="d-flex align-items-center gap-3">
+                                    <div class="hub-icon bg-danger bg-opacity-10 text-danger">
+                                        <i class="fa-solid fa-clock-rotate-left"></i>
+                                    </div>
+                                    <div>
+                                        <h6 class="fw-bold mb-0 text-dark">Academic Calendar & Timetable</h6>
+                                        <span class="small text-muted">Interactive schedule & exam dates</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. INTERACTIVE DEPARTMENT & ACADEMIC CALENDAR -->
+            <div class="mb-5" id="departmentCalendarSection">
+                <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-2 mb-4">
+                    <div>
+                        <h3 class="h4 fw-bold text-dark d-flex align-items-center gap-2 mb-1">
+                            <i class="fa-solid fa-calendar-days text-primary"></i> Department & Academic Calendar
+                        </h3>
+                        <p class="text-secondary small mb-0">Click any date on the calendar to see scheduled exams, hackathons, workshops, and milestones.</p>
+                    </div>
+                    <a href="{% url 'public_events:calendar' %}" class="small text-primary text-decoration-none fw-semibold">
+                        Full Calendar <i class="fa-solid fa-arrow-right ms-1"></i>
+                    </a>
+                </div>
+
+                <div class="card border-0 rounded-4 shadow-sm bg-white overflow-hidden p-3.5 p-md-4">
+                    <div class="row g-4">
+                        <!-- Calendar Month Grid Column (7 Cols) -->
+                        <div class="col-lg-7">
+                            <!-- Calendar Controls -->
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <div class="d-flex align-items-center gap-2">
+                                    <h5 class="fw-bold text-dark mb-0 font-heading" id="homeCalMonthYear">Loading...</h5>
+                                    <button type="button" class="btn btn-outline-primary btn-sm rounded-pill px-2.5 py-0.5" id="homeCalTodayBtn" style="font-size: 0.75rem;">
+                                        Today
+                                    </button>
+                                </div>
+                                <div class="d-flex align-items-center gap-1.5">
+                                    <button type="button" class="btn btn-light border btn-sm rounded-circle p-1.5" id="homeCalPrevBtn" title="Previous Month">
+                                        <i class="fa-solid fa-chevron-left fa-sm"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-light border btn-sm rounded-circle p-1.5" id="homeCalNextBtn" title="Next Month">
+                                        <i class="fa-solid fa-chevron-right fa-sm"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Category Filter Tabs -->
+                            <div class="news-filter-pills-bar d-flex gap-1 overflow-x-auto pb-2 mb-3 border-bottom" id="homeCalFilterBar">
+                                <button type="button" class="news-tab-pill active" data-cal-category="all">All</button>
+                                <button type="button" class="news-tab-pill" data-cal-category="exam">🔴 Exams</button>
+                                <button type="button" class="news-tab-pill" data-cal-category="hackathon">🟣 Hackathons</button>
+                                <button type="button" class="news-tab-pill" data-cal-category="workshop">🔵 Workshops</button>
+                                <button type="button" class="news-tab-pill" data-cal-category="placement">🟢 Placements</button>
+                                <button type="button" class="news-tab-pill" data-cal-category="academic">🟡 Academic</button>
+                            </div>
+
+                            <!-- Calendar Weekdays -->
+                            <div class="calendar-weekdays-grid mb-2 text-center text-muted fw-semibold small">
+                                <div>Su</div><div>Mo</div><div>Tu</div><div>We</div><div>Th</div><div>Fr</div><div>Sa</div>
+                            </div>
+
+                            <!-- Calendar Days Grid Container -->
+                            <div class="calendar-days-grid" id="homeCalDaysGrid">
+                                <!-- Populated dynamically by public.js -->
+                            </div>
+
+                            <div class="d-flex align-items-center gap-3 mt-3 pt-2 border-top small text-muted flex-wrap">
+                                <span class="d-inline-flex align-items-center gap-1"><span class="cal-legend-dot" style="background: #EF4444;"></span> Exams</span>
+                                <span class="d-inline-flex align-items-center gap-1"><span class="cal-legend-dot" style="background: #8B5CF6;"></span> Hackathons</span>
+                                <span class="d-inline-flex align-items-center gap-1"><span class="cal-legend-dot" style="background: #365ACA;"></span> Workshops</span>
+                                <span class="d-inline-flex align-items-center gap-1"><span class="cal-legend-dot" style="background: #10B981;"></span> Placements</span>
+                                <span class="d-inline-flex align-items-center gap-1"><span class="cal-legend-dot" style="background: #F59E0B;"></span> Academic</span>
+                            </div>
+                        </div>
+
+                        <!-- Selected Day Schedule Panel Column (5 Cols) -->
+                        <div class="col-lg-5 border-start-lg">
+                            <div class="d-flex align-items-center justify-content-between mb-3">
+                                <div>
+                                    <h6 class="fw-bold text-dark mb-0 font-heading" id="homeCalSelectedDateTitle">Today's Schedule</h6>
+                                    <span class="small text-muted" id="homeCalSelectedDateSubtitle">Select a date with dots</span>
+                                </div>
+                                <span class="badge bg-primary-subtle text-primary rounded-pill px-2 py-0.5" id="homeCalEventsCount" style="font-size: 0.72rem;">0 items</span>
+                            </div>
+
+                            <div class="day-schedules-container" id="homeCalDayScheduleList" style="max-height: 380px; overflow-y: auto;">
+                                <div class="text-center py-4 text-muted">
+                                    <i class="fa-regular fa-calendar fa-2x opacity-25 mb-2 d-block"></i>
+                                    <p class="small mb-0">Click any date to inspect scheduled circulars, tests, and events.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4. LATEST TECHNICAL BLOGS -->
+            <div class="mb-5">
+                <div class="d-flex align-items-center justify-content-between mb-4">
+                    <h3 class="h4 fw-bold text-dark d-flex align-items-center gap-2 mb-0">
+                        <i class="fa-solid fa-newspaper text-primary"></i> Latest Technical Articles
+                    </h3>
+                    <a href="{% url 'public_blog:list' %}" class="small text-primary text-decoration-none fw-semibold">
+                        Browse All <i class="fa-solid fa-arrow-right ms-1"></i>
+                    </a>
+                </div>
+
+                <div class="row g-4">
+                    {% for blog in latest_blogs %}
+                    <div class="col-md-6">
+                        <div class="card h-100 blog-card border-0 rounded-4 shadow-xs overflow-hidden">
+                            {% if blog.featured_image %}
+                            <div class="card-img-wrapper position-relative overflow-hidden">
+                                <img src="{{ blog.featured_image.url }}" class="card-img-top" alt="{{ blog.title }}" loading="lazy">
+                                {% if blog.category %}
+                                <span class="badge bg-dark bg-opacity-75 text-white position-absolute top-2 start-2 rounded-pill px-2.5 py-1 backdrop-blur" style="font-size: 0.75rem;">
+                                    {{ blog.category.name }}
+                                </span>
+                                {% endif %}
+                            </div>
+                            {% endif %}
+                            <div class="card-body p-4 d-flex flex-column">
+                                <div class="text-muted small mb-2 d-flex align-items-center gap-2">
+                                    <i class="fa-regular fa-clock"></i> {{ blog.published_at|date:'d M Y' }}
+                                    <span class="opacity-50">·</span>
+                                    <span><i class="fa-regular fa-eye me-1"></i>{{ blog.views_count }}</span>
+                                </div>
+                                <h5 class="card-title fw-bold text-dark mb-2">
+                                    <a href="{% url 'public_blog:detail' blog.slug %}" class="text-decoration-none text-dark hover-primary">
+                                        {{ blog.title }}
+                                    </a>
+                                </h5>
+                                <p class="card-text text-secondary small mb-4">
+                                    {{ blog.content|striptags|truncatewords:18 }}
+                                </p>
+                                <div class="mt-auto pt-3 border-top d-flex align-items-center justify-content-between">
+                                    <span class="small text-muted"><i class="fa-solid fa-user-pen me-1"></i>{{ blog.author.get_full_name|default:blog.author.email|truncatechars:18 }}</span>
+                                    <a href="{% url 'public_blog:detail' blog.slug %}" class="btn btn-outline-primary btn-sm rounded-pill px-3">
+                                        Read More
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <div class="col-12">
+                        <p class="text-muted text-center py-4 bg-light rounded-4">No technical articles published yet.</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- 4. UPCOMING EVENTS HIGHLIGHT -->
+            <div>
+                <div class="d-flex align-items-center justify-content-between mb-4">
+                    <h3 class="h4 fw-bold text-dark d-flex align-items-center gap-2 mb-0">
+                        <i class="fa-solid fa-calendar-days text-success"></i> Department Events & Workshops
+                    </h3>
+                    <a href="{% url 'public_events:list' %}" class="small text-primary text-decoration-none fw-semibold">
+                        All Events <i class="fa-solid fa-arrow-right ms-1"></i>
+                    </a>
+                </div>
+
+                <div class="row g-3">
+                    {% for event in upcoming_events %}
+                    <div class="col-md-4">
+                        <div class="card h-100 event-card border-0 rounded-4 shadow-xs p-3.5 bg-white">
+                            <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill mb-2 align-self-start">
+                                {{ event.get_category_display }}
+                            </span>
+                            <h6 class="fw-bold text-dark mb-2">{{ event.title|truncatechars:40 }}</h6>
+                            <div class="small text-muted mb-2">
+                                <i class="fa-regular fa-calendar me-1 text-primary"></i> {{ event.event_date|date:'d M Y' }}
+                            </div>
+                            <div class="small text-muted mb-3">
+                                <i class="fa-solid fa-location-dot me-1 text-danger"></i> {{ event.venue|truncatechars:25 }}
+                            </div>
+                            <div class="mt-auto">
+                                {% if event.registration_link %}
+                                <a href="{{ event.registration_link }}" target="_blank" class="btn btn-success btn-sm w-100 rounded-pill">
+                                    Register Now <i class="fa-solid fa-arrow-up-right-from-square ms-1"></i>
+                                </a>
+                                {% else %}
+                                <span class="badge bg-light text-secondary w-100 py-2">Open for Students</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <div class="col-12">
+                        <p class="text-muted text-center py-3 bg-light rounded-4 mb-0">No upcoming events scheduled right now.</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+        </div>
+
+        <!-- ================= RIGHT COLUMN: LIVE NEWS & BULLETIN BOARD (5 Cols) ================= -->
+        <div class="col-lg-5 col-xl-4">
+            <div class="news-bulletin-sidebar" id="newsBoardContainer">
+
+                <div class="card news-board-card border-0 shadow-md rounded-4 overflow-hidden bg-white">
+                    <!-- Widget Header -->
+                    <div class="news-board-header text-white d-flex align-items-center justify-content-between">
+                        <div class="d-flex flex-column pe-2">
+                            <div class="d-flex align-items-center gap-2 mb-1">
+                                <h5 class="mb-0 fw-bold text-white fs-6">Latest News</h5>
+                                <span class="live-pulse-badge">
+                                    <span class="live-pulse-dot"></span> LIVE
+                                </span>
+                            </div>
+                            <span class="small text-white text-opacity-75" style="font-size: 0.73rem;">Official Department Notice Board</span>
+                        </div>
+                        <a href="{% url 'public_news:list' %}" class="btn-news-header-viewall" title="View all department announcements">
+                            <span>View All</span>
+                            <i class="fa-solid fa-arrow-right" style="font-size: 0.68rem;"></i>
+                        </a>
+                    </div>
+
+                    <!-- Category Filter Tabs & Quick Search -->
+                    <div class="p-3 bg-light border-bottom">
+                        <!-- Quick Search inside widget -->
+                        <div class="input-group input-group-sm mb-2.5">
+                            <span class="input-group-text bg-white border-end-0 rounded-start-pill ps-3 text-muted">
+                                <i class="fa-solid fa-magnifying-glass text-primary" style="font-size: 0.8rem;"></i>
+                            </span>
+                            <input type="text" id="newsWidgetSearch" class="form-control border-start-0 rounded-end-pill ps-1 bg-white shadow-none" placeholder="Filter announcements...">
+                        </div>
+
+                        <div class="news-filter-pills-bar d-flex gap-1.5 overflow-x-auto pb-1" id="newsFilterBar">
+                            <button type="button" class="news-tab-pill active" data-category="all">All</button>
+                            <button type="button" class="news-tab-pill" data-category="urgent">
+                                <i class="fa-solid fa-thumbtack text-danger me-1"></i> Urgent
+                            </button>
+                            <button type="button" class="news-tab-pill" data-category="placement">Placements</button>
+                            <button type="button" class="news-tab-pill" data-category="exam">Exams</button>
+                            <button type="button" class="news-tab-pill" data-category="hackathon">Hackathons</button>
+                            <button type="button" class="news-tab-pill" data-category="circular">Circulars</button>
+                        </div>
+                    </div>
+
+                    <!-- Scrollable News Feed Container -->
+                    <div class="news-feed-scroll-container p-3" id="newsFeedList" style="max-height: 640px; overflow-y: auto;">
+                        {% for item in latest_news %}
+                        <div class="news-feed-item mb-3 p-3 rounded-3 transition-all {% if item.is_pinned %}urgent-feed-item{% else %}regular-feed-item{% endif %}" 
+                             data-category="{{ item.category }}" 
+                             data-pinned="{{ item.is_pinned|yesno:'true,false' }}"
+                             data-title="{{ item.title|lower }}"
+                             data-summary="{{ item.summary|lower }}"
+                             data-news-id="{{ item.id }}"
+                             data-news-title="{{ item.title }}"
+                             data-news-category="{{ item.get_category_display }}"
+                             data-news-content="{{ item.content }}"
+                             data-news-date="{{ item.published_at|date:'d M Y' }}"
+                             data-news-urgent="{{ item.is_pinned|yesno:'true,false' }}"
+                             data-news-attachment="{% if item.attachment %}{{ item.attachment.url }}{% endif %}"
+                             data-news-link="{{ item.external_link }}"
+                             data-news-url="{% url 'public_news:detail' item.slug %}">
+
+                            <!-- Category & Date Header -->
+                            <div class="d-flex align-items-center justify-content-between gap-2 mb-1.5">
+                                <div class="d-flex align-items-center gap-1.5">
+                                    {% if item.is_pinned %}
+                                    <span class="badge bg-danger text-white rounded-pill px-2 py-0.5 fw-bold" style="font-size: 0.68rem;">
+                                        <i class="fa-solid fa-thumbtack me-1"></i> URGENT
+                                    </span>
+                                    {% endif %}
+                                    <span class="badge category-badge-{{ item.category }} rounded-pill px-2 py-0.5" style="font-size: 0.7rem;">
+                                        {{ item.get_category_display }}
+                                    </span>
+                                </div>
+                                <span class="text-muted" style="font-size: 0.72rem;">
+                                    <i class="fa-regular fa-clock me-1"></i>{{ item.published_at|date:'d M' }}
+                                </span>
+                            </div>
+
+                            <!-- News Headline -->
+                            <h6 class="fw-bold mb-1 news-item-title">
+                                <a href="{% url 'public_news:detail' item.slug %}" class="text-decoration-none text-dark hover-primary news-quick-link">
+                                    {{ item.title }}
+                                </a>
+                            </h6>
+
+                            <!-- Snippet -->
+                            <p class="text-secondary small mb-2 news-item-desc" style="font-size: 0.82rem; line-height: 1.4;">
+                                {{ item.summary|default:item.content|truncatewords:14 }}
+                            </p>
+
+                            <!-- Micro Action Bar -->
+                            <div class="d-flex align-items-center justify-content-between pt-2 border-top border-light-subtle">
+                                <div class="d-flex gap-1.5">
+                                    {% if item.attachment %}
+                                    <a href="{{ item.attachment.url }}" target="_blank" class="badge bg-light text-primary border text-decoration-none" title="Download Circular / Document">
+                                        <i class="fa-solid fa-paperclip me-1"></i> PDF
+                                    </a>
+                                    {% endif %}
+                                    {% if item.external_link %}
+                                    <a href="{{ item.external_link }}" target="_blank" class="badge bg-light text-success border text-decoration-none" title="External Portal Link">
+                                        <i class="fa-solid fa-link me-1"></i> Link
+                                    </a>
+                                    {% endif %}
+                                </div>
+
+                                <button type="button" class="btn btn-link btn-sm text-primary text-decoration-none p-0 fw-semibold news-modal-trigger" style="font-size: 0.78rem;">
+                                    Quick Preview <i class="fa-solid fa-chevron-right ms-0.5"></i>
+                                </button>
+                            </div>
+                        </div>
+                        {% empty %}
+                        <div class="text-center py-5 text-muted" id="noNewsFallback">
+                            <i class="fa-solid fa-bullhorn fa-2x mb-2 opacity-50"></i>
+                            <p class="small mb-0">No announcements posted yet.</p>
+                        </div>
+                        {% endfor %}
+
+                        <div class="text-center py-4 text-muted d-none" id="newsFilterEmptyMsg">
+                            <i class="fa-solid fa-filter-circle-xmark fa-2x mb-2 opacity-50"></i>
+                            <p class="small mb-0">No bulletins match this filter.</p>
+                        </div>
+                    </div>
+
+                    <!-- Footer of News Box -->
+                    <div class="p-3 bg-light border-top text-center">
+                        <a href="{% url 'public_news:list' %}" class="btn btn-outline-primary btn-sm rounded-pill w-100 fw-semibold">
+                            <i class="fa-solid fa-layer-group me-1"></i> Browse All Announcements Archive
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Live Ticker Helper Box -->
+                <div class="mt-3 p-3 rounded-4 bg-primary bg-opacity-10 border border-primary border-opacity-25 d-flex align-items-center justify-content-between">
+                    <div class="d-flex align-items-center gap-2">
+                        <i class="fa-solid fa-bell text-primary"></i>
+                        <span class="small fw-semibold text-dark">Stay in the loop</span>
+                    </div>
+                    <a href="{% url 'contact:contact' %}" class="small text-primary text-decoration-none fw-bold">
+                        Ask Dept <i class="fa-solid fa-arrow-right ms-1"></i>
+                    </a>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<!-- ==================== DEPARTMENT EXCELLENCE & OFFICIAL PDF ARCHIVES ==================== -->
+<section class="py-5 bg-white border-top">
+    <div class="container py-4">
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-end mb-4 gap-3">
+            <div>
+                <span class="badge bg-primary bg-opacity-10 text-primary rounded-pill px-3 py-1 text-uppercase fw-semibold mb-2">Department Portals & Official Archives</span>
+                <h2 class="display-6 fw-bold text-dark font-heading mb-0">Department Records & Publications</h2>
+            </div>
+            <div class="d-flex gap-2">
+                <a href="{% url 'core:placements' %}" class="btn btn-outline-primary btn-sm rounded-pill px-3 py-1.5 fw-semibold">
+                    <i class="fa-solid fa-briefcase me-1"></i> Placements
+                </a>
+                <a href="{% url 'core:research' %}" class="btn btn-outline-info btn-sm rounded-pill px-3 py-1.5 fw-semibold">
+                    <i class="fa-solid fa-flask-vial me-1"></i> Research
+                </a>
+                <a href="{% url 'core:achievements' %}" class="btn btn-outline-warning btn-sm rounded-pill px-3 py-1.5 fw-semibold">
+                    <i class="fa-solid fa-trophy me-1"></i> Achievements
+                </a>
+                <a href="{% url 'core:infrastructure' %}" class="btn btn-outline-success btn-sm rounded-pill px-3 py-1.5 fw-semibold">
+                    <i class="fa-solid fa-server me-1"></i> 8 Labs
+                </a>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            <!-- Card 1: Placements -->
+            <div class="col-md-6 col-lg-3">
+                <div class="card border-0 rounded-4 shadow-sm p-4 bg-light h-100 d-flex flex-column justify-content-between">
+                    <div>
+                        <div class="d-flex align-items-center justify-content-between mb-3">
+                            <div class="rounded-3 bg-success bg-opacity-10 text-success p-2.5 d-flex align-items-center justify-content-center">
+                                <i class="fa-solid fa-briefcase fa-xl"></i>
+                            </div>
+                            <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-2.5 py-1 fw-bold">{% if recent_placement_stats %}{{ recent_placement_stats.0.students_placed }} Placed ({{ recent_placement_stats.0.year }}){% else %}149 Placed ('23){% endif %}</span>
+                        </div>
+                        <h5 class="fw-bold text-dark font-heading mb-2">Placement Track Record</h5>
+                        <p class="text-secondary small mb-3">
+                            {% if recent_placement_stats %}{{ recent_placement_stats.0.students_placed }} students placed in the latest published placement record. {{ recent_placement_stats.0.top_recruiters|truncatechars:70 }}{% else %}800+ engineers placed across Tier-1 recruiters including Zoho, TCS, Infosys, Cognizant, and Accenture.{% endif %}
+                        </p>
+                    </div>
+                    <a href="{% url 'core:placements' %}" class="btn btn-success btn-sm rounded-pill w-100 fw-semibold">
+                        View Placement Growth <i class="fa-solid fa-arrow-right ms-1"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Card 2: Research & Journals -->
+            <div class="col-md-6 col-lg-3">
+                <div class="card border-0 rounded-4 shadow-sm p-4 bg-light h-100 d-flex flex-column justify-content-between">
+                    <div>
+                        <div class="d-flex align-items-center justify-content-between mb-3">
+                            <div class="rounded-3 bg-info bg-opacity-10 text-info p-2.5 d-flex align-items-center justify-content-center">
+                                <i class="fa-solid fa-flask-vial fa-xl"></i>
+                            </div>
+                            <span class="badge bg-info-subtle text-info border border-info-subtle rounded-pill px-2.5 py-1 fw-bold">{% if research_documents %}{{ research_documents.0.academic_year|default:'Research' }}{% else %}Anna Univ Centre{% endif %}</span>
+                        </div>
+                        <h5 class="fw-bold text-dark font-heading mb-2">Research & Journals</h5>
+                        <p class="text-secondary small mb-3">
+                            {% if research_documents %}{{ research_documents.0.title }}{% else %}Download yearly Scopus and Web of Science peer-reviewed journal publication directories (2018–2023).{% endif %}
+                        </p>
+                    </div>
+                    <a href="{% url 'core:research' %}" class="btn btn-info btn-sm rounded-pill w-100 fw-semibold text-white">
+                        Explore Journals & PDFs <i class="fa-solid fa-arrow-right ms-1"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Card 3: Achievements -->
+            <div class="col-md-6 col-lg-3">
+                <div class="card border-0 rounded-4 shadow-sm p-4 bg-light h-100 d-flex flex-column justify-content-between">
+                    <div>
+                        <div class="d-flex align-items-center justify-content-between mb-3">
+                            <div class="rounded-3 bg-warning bg-opacity-10 text-warning p-2.5 d-flex align-items-center justify-content-center">
+                                <i class="fa-solid fa-trophy fa-xl"></i>
+                            </div>
+                            <span class="badge bg-warning-subtle text-warning border border-warning-subtle rounded-pill px-2.5 py-1 fw-bold">{% if achievement_documents %}{{ achievement_documents.0.academic_year|default:'Archive' }}{% else %}40+ Hackathons{% endif %}</span>
+                        </div>
+                        <h5 class="fw-bold text-dark font-heading mb-2">Student Achievements</h5>
+                        <p class="text-secondary small mb-3">
+                            {% if achievement_documents %}{{ achievement_documents.0.title }}{% else %}Smart India Hackathon wins, patent publications, coding triumphs, and student awards archive.{% endif %}
+                        </p>
+                    </div>
+                    <a href="{% url 'core:achievements' %}" class="btn btn-warning btn-sm rounded-pill w-100 fw-semibold text-dark">
+                        View Achievements Archive <i class="fa-solid fa-arrow-right ms-1"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Card 4: Computing Labs -->
+            <div class="col-md-6 col-lg-3">
+                <div class="card border-0 rounded-4 shadow-sm p-4 bg-light h-100 d-flex flex-column justify-content-between">
+                    <div>
+                        <div class="d-flex align-items-center justify-content-between mb-3">
+                            <div class="rounded-3 bg-primary bg-opacity-10 text-primary p-2.5 d-flex align-items-center justify-content-center">
+                                <i class="fa-solid fa-server fa-xl"></i>
+                            </div>
+                            <span class="badge bg-primary-subtle text-primary border border-primary-subtle rounded-pill px-2.5 py-1 fw-bold">{% if department_labs %}{{ department_labs|length }} Labs{% else %}8 Labs + Library{% endif %}</span>
+                        </div>
+                        <h5 class="fw-bold text-dark font-heading mb-2">Laboratories & Library</h5>
+                        <p class="text-secondary small mb-3">
+                            {% if department_labs %}{{ department_labs.0.name }}{% else %}James Gosling, Dennis Ritchie, Backus, Ellison, Babbage, Thompson & Donald Chamberlin PG Lab.{% endif %}
+                        </p>
+                    </div>
+                    <a href="{% url 'core:infrastructure' %}" class="btn btn-primary btn-sm rounded-pill w-100 fw-semibold">
+                        View Lab Facilities <i class="fa-solid fa-arrow-right ms-1"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Card 5: Alumni (SHIMMER) -->
+            <div class="col-md-6 col-lg-3">
+                <div class="card border-0 rounded-4 shadow-sm p-4 bg-light h-100 d-flex flex-column justify-content-between">
+                    <div>
+                        <div class="d-flex align-items-center justify-content-between mb-3">
+                            <div class="rounded-3 bg-danger bg-opacity-10 text-danger p-2.5 d-flex align-items-center justify-content-center">
+                                <i class="fa-solid fa-user-graduate fa-xl"></i>
+                            </div>
+                            <span class="badge bg-danger-subtle text-danger border border-danger-subtle rounded-pill px-2.5 py-1 fw-bold">SHIMMER</span>
+                        </div>
+                        <h5 class="fw-bold text-dark font-heading mb-2">Alumni Network</h5>
+                        <p class="text-secondary small mb-3">{% if alumni_documents %}{{ alumni_documents.0.title }}{% else %}Connect with the CSE alumni community and access official SHIMMER records.{% endif %}</p>
+                    </div>
+                    <a href="{% url 'core:alumni' %}" class="btn btn-danger btn-sm rounded-pill w-100 fw-semibold">View SHIMMER <i class="fa-solid fa-arrow-right ms-1"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ==================== ANIMATED ACHIEVEMENTS COUNTER SECTION ==================== -->
+<section class="bg-gradient-dark py-5 text-white position-relative overflow-hidden achievements-section">
+    <div class="container py-4 position-relative z-2">
+        <div class="text-center mb-5">
+            <span class="badge bg-primary rounded-pill px-3 py-1.5 text-uppercase fw-semibold mb-2">Institutional Legacy</span>
+            <h2 class="display-5 fw-bold text-white mb-2 font-heading">Department Official Milestones</h2>
+            <p class="text-light opacity-75 max-w-600 mx-auto">
+                25+ years of engineering leadership, high-impact research, and continuous career growth at SRM Valliammai CSE.
+            </p>
+        </div>
+
+        <div class="row g-4 text-center">
+            {% for milestone in department_milestones|slice:":4" %}
+            <div class="col-md-3 col-6">
+                <div class="achievement-counter-card p-4 rounded-4 backdrop-blur h-100">
+                    <div class="counter-icon-box text-warning mb-3">
+                        <i class="{{ milestone.icon }} fa-2x"></i>
+                    </div>
+                    <div class="display-4 fw-extrabold text-warning mb-1">{{ milestone.metric_value }}</div>
+                    <h6 class="text-white fw-bold mb-1">{{ milestone.title }}</h6>
+                    <p class="small text-secondary mb-0">{{ milestone.description|truncatechars:45 }}</p>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-md-3 col-6">
+                <div class="achievement-counter-card p-4 rounded-4 backdrop-blur h-100">
+                    <div class="counter-icon-box text-warning mb-3"><i class="fa-solid fa-trophy fa-2x"></i></div>
+                    <div class="display-4 fw-extrabold text-warning mb-1">25+</div>
+                    <h6 class="text-white fw-bold mb-1">Years of Excellence</h6>
+                    <p class="small text-secondary mb-0">Established in 1999</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-6">
+                <div class="achievement-counter-card p-4 rounded-4 backdrop-blur h-100">
+                    <div class="counter-icon-box text-info mb-3"><i class="fa-solid fa-briefcase fa-2x"></i></div>
+                    <div class="display-4 fw-extrabold text-info mb-1">149+</div>
+                    <h6 class="text-white fw-bold mb-1">Placements in 2023</h6>
+                    <p class="small text-secondary mb-0">800+ Total Placements</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-6">
+                <div class="achievement-counter-card p-4 rounded-4 backdrop-blur h-100">
+                    <div class="counter-icon-box text-success mb-3"><i class="fa-solid fa-server fa-2x"></i></div>
+                    <div class="display-4 fw-extrabold text-success mb-1">8</div>
+                    <h6 class="text-white fw-bold mb-1">Computing Labs</h6>
+                    <p class="small text-secondary mb-0">6 UG + 1 PG + Server Center</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-6">
+                <div class="achievement-counter-card p-4 rounded-4 backdrop-blur h-100">
+                    <div class="counter-icon-box text-danger mb-3"><i class="fa-solid fa-book-open fa-2x"></i></div>
+                    <div class="display-4 fw-extrabold text-danger mb-1">100+</div>
+                    <h6 class="text-white fw-bold mb-1">Research Journals</h6>
+                    <p class="small text-secondary mb-0">Anna Univ Recognized Centre</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- ==================== FACULTY SPOTLIGHT ==================== -->
+<section class="container py-5">
+    <div class="d-flex align-items-center justify-content-between mb-5">
+        <div>
+            <span class="badge bg-primary-subtle text-primary rounded-pill px-3 py-1 text-uppercase fw-semibold mb-2">Mentorship & Leadership</span>
+            <h2 class="display-6 fw-bold text-dark font-heading mb-0">Distinguished Faculty</h2>
+        </div>
+        <a href="{% url 'public_faculty:list' %}" class="btn btn-outline-primary rounded-pill px-4">
+            View All Faculty <i class="fa-solid fa-arrow-right ms-1"></i>
+        </a>
+    </div>
+
+    <div class="row g-4">
+        {% for member in faculty %}
+        <div class="col-md-6 col-lg-3">
+            <div class="card faculty-spotlight-card h-100 border-0 rounded-4 shadow-xs overflow-hidden text-center p-4 bg-white d-flex flex-column justify-content-between">
+                <div>
+                    <div class="faculty-avatar-box mx-auto mb-3 position-relative">
+                        {% if member.profile_link %}
+                        <a href="{{ member.profile_link }}" target="_blank" title="View official profile of {{ member.name }}" class="d-inline-block text-decoration-none">
+                        {% endif %}
+                            {% if member.photo %}
+                            <img src="{{ member.photo.url }}" class="rounded-circle shadow-sm faculty-photo" alt="{{ member.name }}" style="width: 90px; height: 90px; object-fit: cover;">
+                            {% else %}
+                            <div class="faculty-photo-placeholder rounded-circle mx-auto bg-gradient-primary text-white d-flex align-items-center justify-content-center" style="width: 90px; height: 90px;">
+                                <i class="fa-solid fa-user-tie fa-2x"></i>
+                            </div>
+                            {% endif %}
+                        {% if member.profile_link %}
+                        </a>
+                        {% endif %}
+                    </div>
+                    <h5 class="fw-bold text-dark mb-1">
+                        {% if member.profile_link %}
+                        <a href="{{ member.profile_link }}" target="_blank" class="text-dark text-decoration-none hover-primary" title="View official profile">
+                            {{ member.name }} <i class="fa-solid fa-arrow-up-right-from-square text-primary" style="font-size: 0.75rem;"></i>
+                        </a>
+                        {% else %}
+                        {{ member.name }}
+                        {% endif %}
+                    </h5>
+                    <p class="text-primary small fw-semibold mb-2">{{ member.get_designation_display }}</p>
+                    <p class="text-muted small mb-3">{{ member.specialization|truncatechars:45 }}</p>
+                </div>
+
+                <div class="d-flex justify-content-center align-items-center gap-2 pt-2 border-top">
+                    {% if member.profile_link %}
+                    <a href="{{ member.profile_link }}" target="_blank" class="btn btn-sm btn-primary rounded-pill px-2.5" style="font-size: 0.75rem;" title="View Official Staff Profile">
+                        <i class="fa-solid fa-id-badge me-1"></i> Profile
+                    </a>
+                    {% endif %}
+                    <a href="mailto:{{ member.email }}" class="btn btn-sm btn-light rounded-circle" title="Email"><i class="fa-solid fa-envelope text-primary"></i></a>
+                    {% if member.scholar_link %}
+                    <a href="{{ member.scholar_link }}" target="_blank" class="btn btn-sm btn-light rounded-circle" title="Google Scholar"><i class="fa-solid fa-graduation-cap text-success"></i></a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12 text-center py-4">
+            <p class="text-muted">Faculty directory will appear here soon.</p>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}

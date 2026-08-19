@@ -1,0 +1,16 @@
+django==4.2.*
+django-environ
+django-crispy-forms
+crispy-bootstrap5
+django-ckeditor
+Pillow
+django-storages[boto3]
+psycopg2-binary
+djangorestframework
+django-cors-headers
+celery
+redis
+django-allauth
+whitenoise
+pytest
+pytest-django

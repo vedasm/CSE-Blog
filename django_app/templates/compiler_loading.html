@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compiler Loading</title>
+    <style>
+        :root {
+            --bg-color: #f8fafc;
+            --accent-start: #3b82f6; /* Blue */
+            --accent-end: #10b981;   /* Green */
+            --text-color: #334155;
+            --spinner-size: 60px;
+            --spinner-thickness: 6px;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: var(--bg-color);
+            font-family: 'Courier New', Courier, monospace;
+            overflow: hidden;
+        }
+
+        .loader-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        /* The Spinner */
+        .spinner {
+            position: relative;
+            width: var(--spinner-size);
+            height: var(--spinner-size);
+            border-radius: 50%;
+            /* Use a conic gradient for the "accent gradient" look */
+            background: conic-gradient(from 0deg, transparent 0%, var(--accent-start) 50%, var(--accent-end) 100%);
+            animation: rotate 1s linear infinite;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Creating the hole in the middle to make it a ring */
+        .spinner::after {
+            content: '';
+            position: absolute;
+            top: var(--spinner-thickness);
+            left: var(--spinner-thickness);
+            right: var(--spinner-thickness);
+            bottom: var(--spinner-thickness);
+            background-color: var(--bg-color);
+            border-radius: 50%;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* Text Styling */
+        .loading-text {
+            color: var(--text-color);
+            font-size: 1.2rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* Blinking cursor effect for the "Compiling..." text */
+        .cursor {
+            display: inline-block;
+            width: 10px;
+            height: 1.2rem;
+            background-color: var(--accent-start);
+            animation: blink 1s step-end infinite;
+            vertical-align: middle;
+        }
+
+        @keyframes blink {
+            from, to { opacity: 1; }
+            50% { opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="loader-container">
+        <div class="spinner"></div>
+        <div class="loading-text">
+            Compiler Compiling<span class="cursor"></span>
+        </div>
+    </div>
+
+</body>
+</html>

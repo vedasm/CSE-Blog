@@ -1,0 +1,99 @@
+{% extends 'base_public.html' %}
+{% block title %}Faculty Directory & IRINS Profiles | SRM Valliammai CSE{% endblock %}
+
+{% block content %}
+<section class="py-5 bg-gradient-primary text-white text-center position-relative overflow-hidden">
+    <div class="container position-relative z-1">
+        <span class="badge bg-white bg-opacity-20 text-white rounded-pill px-3 py-1.5 mb-3 backdrop-blur shadow-xs">
+            <i class="fa-solid fa-graduation-cap me-1"></i> Academic Leadership
+        </span>
+        <h1 class="display-4 fw-bold text-white mb-3">Faculty Directory</h1>
+        <p class="lead opacity-90 max-w-650 mx-auto">
+            Meet the experienced professors, researchers, and technical mentors. Click on any faculty member's photo to view their official IRINS research profile.
+        </p>
+    </div>
+</section>
+
+<section class="container py-5">
+    <div class="row g-4">
+        {% for member in faculty %}
+        <div class="col-md-6 col-lg-4">
+            <div class="card h-100 faculty-card border-0 rounded-4 shadow-xs p-4 bg-white text-center d-flex flex-column justify-content-between">
+                <div>
+                    <!-- Photo (Clickable to IRINS Profile) -->
+                    <div class="faculty-avatar-box mx-auto mb-3 position-relative d-inline-block">
+                        {% if member.profile_link %}
+                        <a href="{{ member.profile_link }}" target="_blank" title="Click to view official IRINS profile of {{ member.name }}" class="d-inline-block text-decoration-none position-relative group-hover-zoom">
+                        {% endif %}
+                            {% if member.photo %}
+                            <img src="{{ member.photo.url }}" class="rounded-circle shadow-sm faculty-photo border border-2 border-primary border-opacity-25" alt="{{ member.name }}" style="width: 115px; height: 115px; object-fit: cover;">
+                            {% else %}
+                            <div class="faculty-photo-placeholder rounded-circle mx-auto bg-gradient-primary text-white d-flex align-items-center justify-content-center" style="width: 115px; height: 115px;">
+                                <i class="fa-solid fa-user-tie fa-3x"></i>
+                            </div>
+                            {% endif %}
+                            {% if member.profile_link %}
+                            <span class="position-absolute bottom-0 end-0 bg-primary text-white rounded-circle p-1.5 shadow-sm d-flex align-items-center justify-content-center" style="width: 28px; height: 28px; font-size: 0.75rem;" title="IRINS Profile Linked">
+                                <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                            </span>
+                            {% endif %}
+                        {% if member.profile_link %}
+                        </a>
+                        {% endif %}
+                    </div>
+
+                    <!-- Name & Designation -->
+                    <h4 class="fw-bold text-dark mb-1">
+                        {% if member.profile_link %}
+                        <a href="{{ member.profile_link }}" target="_blank" class="text-dark text-decoration-none hover-primary" title="View IRINS profile">
+                            {{ member.name }} <i class="fa-solid fa-arrow-up-right-from-square text-primary ms-1" style="font-size: 0.8rem;"></i>
+                        </a>
+                        {% else %}
+                        {{ member.name }}
+                        {% endif %}
+                    </h4>
+                    <p class="text-primary fw-semibold small mb-2">{{ member.get_designation_display }}</p>
+
+                    <div class="badge bg-light text-secondary border rounded-pill px-3 py-1.5 mb-3 text-wrap" style="font-size: 0.78rem;">
+                        <i class="fa-solid fa-microchip me-1 text-primary"></i> {{ member.specialization }}
+                    </div>
+
+                    {% if member.bio %}
+                    <p class="text-secondary small mb-4">
+                        {{ member.bio|truncatewords:22 }}
+                    </p>
+                    {% endif %}
+                </div>
+
+                <div>
+                    <!-- Primary Redirect Button to IRINS Profile Link -->
+                    {% if member.profile_link %}
+                    <div class="mb-3">
+                        <a href="{{ member.profile_link }}" target="_blank" class="btn btn-primary btn-sm w-100 rounded-pill py-2 fw-semibold shadow-xs d-flex align-items-center justify-content-center gap-2">
+                            <i class="fa-solid fa-graduation-cap text-warning"></i> View IRINS Profile <i class="fa-solid fa-arrow-up-right-from-square" style="font-size: 0.75rem;"></i>
+                        </a>
+                    </div>
+                    {% endif %}
+
+                    <!-- Secondary Links (Email & Scholar) -->
+                    <div class="d-flex justify-content-center gap-2 pt-2 border-top">
+                        <a href="mailto:{{ member.email }}" class="btn btn-outline-secondary btn-sm rounded-pill px-3" title="Send Email">
+                            <i class="fa-solid fa-envelope me-1 text-primary"></i> Email
+                        </a>
+                        {% if member.scholar_link %}
+                        <a href="{{ member.scholar_link }}" target="_blank" class="btn btn-outline-success btn-sm rounded-pill px-3" title="Google Scholar Profile">
+                            <i class="fa-solid fa-book-bookmark me-1"></i> Scholar
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12 text-center py-5">
+            <p class="text-muted">Faculty profiles will appear here soon.</p>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}

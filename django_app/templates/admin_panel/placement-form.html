@@ -1,0 +1,27 @@
+{% extends 'base_admin.html' %}
+{% block page_title %}{% if form.instance.pk %}Edit Placement{% else %}Add Placement{% endif %}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center"><div class="col-lg-9">
+<div class="card shadow-sm border-0 bg-white rounded-4 overflow-hidden">
+    <div class="card-header bg-white border-bottom p-4 d-flex justify-content-between align-items-center">
+        <h4 class="fw-bold mb-0 font-heading"><i class="fa-solid fa-briefcase text-success me-2"></i>{% if form.instance.pk %}Edit {{ form.instance.year }} Placement{% else %}Add Placement Record{% endif %}</h4>
+        <a href="{% url 'core_admin:manage_placements' %}" class="btn btn-outline-secondary btn-sm rounded-pill">Back</a>
+    </div>
+    <div class="card-body p-4 p-md-5">
+        {% if form.errors %}<div class="alert alert-danger">{{ form.errors }}</div>{% endif %}
+        <form method="post" novalidate>{% csrf_token %}
+            <div class="row g-3">
+                {% for field in form %}
+                <div class="{% if field.name == 'top_recruiters' %}col-12{% else %}col-md-6{% endif %}">
+                    <label class="form-label fw-semibold" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    {{ field }}{% if field.help_text %}<div class="form-text">{{ field.help_text }}</div>{% endif %}
+                </div>
+                {% endfor %}
+            </div>
+            <div class="d-flex justify-content-end gap-2 pt-4 mt-4 border-top"><a href="{% url 'core_admin:manage_placements' %}" class="btn btn-outline-secondary rounded-pill px-4">Cancel</a><button class="btn btn-success rounded-pill px-4" type="submit"><i class="fa-solid fa-floppy-disk me-1"></i> Save Record</button></div>
+        </form>
+    </div>
+</div>
+</div></div>
+{% endblock %}

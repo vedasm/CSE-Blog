@@ -1,0 +1,134 @@
+{% extends 'base_public.html' %}
+{% block title %}News & Announcements | SRM Valliammai CSE{% endblock %}
+
+{% block content %}
+<!-- Header Section -->
+<section class="py-5 bg-gradient-primary text-white position-relative overflow-hidden">
+    <div class="container position-relative z-1 py-3 text-center">
+        <div class="d-inline-flex align-items-center gap-2 px-3 py-1.5 rounded-pill bg-white bg-opacity-20 backdrop-blur mb-3 shadow-sm">
+            <span class="live-pulse-dot"></span>
+            <span class="small fw-semibold text-white">Department Official Notice Board</span>
+        </div>
+        <h1 class="display-4 fw-bold text-white mb-3">News & Announcements</h1>
+        <p class="lead mb-4 max-w-700 mx-auto opacity-90">
+            Stay informed with the latest circulars, semester exam notifications, placement drives, hackathon registrations, and faculty updates.
+        </p>
+
+        <!-- Search Bar -->
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6">
+                <form method="get" class="search-glass-form p-1 rounded-pill shadow-lg d-flex gap-1">
+                    <input type="text" name="search" value="{{ search_term }}" class="form-control rounded-pill border-0 ps-4 py-2 bg-white" placeholder="Search circulars, hackathons, placements...">
+                    {% if selected_category %}
+                        <input type="hidden" name="category" value="{{ selected_category }}">
+                    {% endif %}
+                    <button type="submit" class="btn btn-warning rounded-pill px-4">
+                        <i class="fa-solid fa-magnifying-glass me-1"></i> Search
+                    </button>
+                    {% if search_term or selected_category %}
+                        <a href="{% url 'public_news:list' %}" class="btn btn-outline-light rounded-pill px-3" title="Clear search">
+                            <i class="fa-solid fa-xmark"></i>
+                        </a>
+                    {% endif %}
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Content & Filter Section -->
+<section class="container py-5">
+    <!-- Category Pills Filter -->
+    <div class="d-flex flex-wrap align-items-center justify-content-center gap-2 mb-5">
+        <a href="{% url 'public_news:list' %}{% if search_term %}?search={{ search_term }}{% endif %}" 
+           class="category-pill {% if not selected_category %}active{% endif %}">
+            <i class="fa-solid fa-layer-group me-1"></i> All Bulletins
+        </a>
+        {% for code, label in categories %}
+        <a href="?category={{ code }}{% if search_term %}&search={{ search_term }}{% endif %}" 
+           class="category-pill {% if selected_category == code %}active{% endif %}">
+            {% if code == 'placement' %}<i class="fa-solid fa-briefcase me-1 text-success"></i>
+            {% elif code == 'hackathon' %}<i class="fa-solid fa-trophy me-1 text-warning"></i>
+            {% elif code == 'exam' %}<i class="fa-solid fa-file-signature me-1 text-danger"></i>
+            {% elif code == 'circular' %}<i class="fa-solid fa-file-lines me-1 text-info"></i>
+            {% elif code == 'event' %}<i class="fa-solid fa-calendar-days me-1 text-primary"></i>
+            {% else %}<i class="fa-solid fa-bullhorn me-1 text-secondary"></i>{% endif %}
+            {{ label }}
+        </a>
+        {% endfor %}
+    </div>
+
+    <!-- News List -->
+    <div class="row g-4 justify-content-center">
+        <div class="col-lg-10">
+            {% for item in news_items %}
+            <div class="card news-card mb-3 border-0 shadow-sm rounded-4 overflow-hidden {% if item.is_pinned %}pinned-border{% endif %}">
+                <div class="card-body p-4">
+                    <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-3">
+                        <div class="d-flex align-items-center gap-2">
+                            {% if item.is_pinned %}
+                                <span class="badge bg-danger-gradient text-white px-3 py-1.5 rounded-pill shadow-xs d-inline-flex align-items-center gap-1">
+                                    <span class="live-pulse-dot bg-white"></span> URGENT BULLETIN
+                                </span>
+                            {% endif %}
+                            <span class="badge category-badge-{{ item.category }} rounded-pill px-3 py-1.5">
+                                {{ item.get_category_display }}
+                            </span>
+                        </div>
+                        <div class="text-muted small d-flex align-items-center gap-2">
+                            <i class="fa-regular fa-clock"></i>
+                            <span>{{ item.published_at|date:'d M Y, h:i A' }}</span>
+                            <span class="text-muted opacity-50">·</span>
+                            <span><i class="fa-regular fa-eye me-1"></i>{{ item.views_count }} views</span>
+                        </div>
+                    </div>
+
+                    <h3 class="h4 fw-bold text-dark mb-2">
+                        <a href="{% url 'public_news:detail' item.slug %}" class="text-decoration-none text-dark hover-primary">
+                            {{ item.title }}
+                        </a>
+                    </h3>
+
+                    <p class="text-secondary mb-4 leading-relaxed">
+                        {{ item.summary|default:item.content|truncatewords:45 }}
+                    </p>
+
+                    <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 pt-3 border-top border-light-subtle">
+                        <div class="d-flex flex-wrap gap-2">
+                            {% if item.attachment %}
+                                <a href="{{ item.attachment.url }}" target="_blank" class="btn btn-sm btn-outline-primary rounded-pill px-3">
+                                    <i class="fa-solid fa-file-arrow-down me-1"></i> Download Circular / Attachment
+                                </a>
+                            {% endif %}
+                            {% if item.external_link %}
+                                <a href="{{ item.external_link }}" target="_blank" class="btn btn-sm btn-outline-success rounded-pill px-3">
+                                    <i class="fa-solid fa-arrow-up-right-from-square me-1"></i> Official Portal Link
+                                </a>
+                            {% endif %}
+                        </div>
+
+                        <a href="{% url 'public_news:detail' item.slug %}" class="btn btn-primary btn-sm rounded-pill px-4">
+                            Read Full Details <i class="fa-solid fa-chevron-right ms-1"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="text-center py-5">
+                <div class="p-4 bg-white rounded-4 shadow-sm max-w-500 mx-auto">
+                    <i class="fa-solid fa-newspaper fa-4x text-muted opacity-50 mb-3"></i>
+                    <h4 class="fw-bold text-secondary">No Announcements Found</h4>
+                    <p class="text-muted mb-3">There are no notices matching your current search or category filter.</p>
+                    <a href="{% url 'public_news:list' %}" class="btn btn-outline-primary rounded-pill px-4">
+                        Reset Filters
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+
+            <!-- Pagination -->
+            {% include 'public/_pagination.html' with page_obj=page_obj %}
+        </div>
+    </div>
+</section>
+{% endblock %}

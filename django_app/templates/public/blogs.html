@@ -1,0 +1,86 @@
+{% extends 'base_public.html' %}
+{% block title %}Technical Blogs & Research | SRM Valliammai CSE{% endblock %}
+
+{% block content %}
+<section class="py-5 bg-gradient-primary text-white text-center position-relative overflow-hidden">
+    <div class="container position-relative z-1">
+        <span class="badge bg-white bg-opacity-20 text-white rounded-pill px-3 py-1.5 mb-3 backdrop-blur shadow-xs">
+            <i class="fa-solid fa-code me-1"></i> Knowledge Base & Insights
+        </span>
+        <h1 class="display-4 fw-bold text-white mb-3">Department Tech Articles</h1>
+        <p class="lead opacity-90 max-w-650 mx-auto mb-4">
+            Explore deep dives on systems programming, artificial intelligence, cloud architectures, competitive coding editorials, and student capstone projects.
+        </p>
+
+        <!-- Search Bar -->
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6">
+                <form class="search-glass-form p-1 rounded-pill shadow-lg d-flex gap-1" method="get">
+                    <input name="search" value="{{ request.GET.search }}" class="form-control rounded-pill border-0 ps-4 py-2 bg-white" placeholder="Search technical articles by title or tag...">
+                    <button class="btn btn-warning rounded-pill px-4" type="submit">
+                        <i class="fa-solid fa-magnifying-glass me-1"></i> Search
+                    </button>
+                    {% if request.GET.search %}
+                    <a href="{% url 'public_blog:list' %}" class="btn btn-outline-light rounded-pill px-3" title="Clear Search">
+                        <i class="fa-solid fa-xmark"></i>
+                    </a>
+                    {% endif %}
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="container py-5">
+    <div class="row g-4">
+        {% for blog in blogs %}
+        <div class="col-md-6 col-lg-4">
+            <div class="card h-100 blog-card border-0 rounded-4 shadow-xs overflow-hidden bg-white">
+                {% if blog.featured_image %}
+                <div class="card-img-wrapper position-relative overflow-hidden">
+                    <img src="{{ blog.featured_image.url }}" class="card-img-top" alt="{{ blog.title }}" loading="lazy">
+                    {% if blog.category %}
+                    <span class="badge bg-dark bg-opacity-75 text-white position-absolute top-2 start-2 rounded-pill px-2.5 py-1 backdrop-blur" style="font-size: 0.75rem;">
+                        {{ blog.category.name }}
+                    </span>
+                    {% endif %}
+                </div>
+                {% endif %}
+                <div class="card-body p-4 d-flex flex-column">
+                    <div class="text-muted small mb-2 d-flex align-items-center gap-2">
+                        <i class="fa-regular fa-clock"></i> {{ blog.published_at|date:'d M Y' }}
+                        <span class="opacity-50">·</span>
+                        <span><i class="fa-regular fa-eye me-1"></i>{{ blog.views_count }} views</span>
+                    </div>
+                    <h4 class="card-title fw-bold text-dark mb-2">
+                        <a href="{% url 'public_blog:detail' blog.slug %}" class="text-decoration-none text-dark hover-primary">
+                            {{ blog.title }}
+                        </a>
+                    </h4>
+                    <p class="card-text text-secondary small mb-4 flex-grow-1">
+                        {{ blog.content|striptags|truncatewords:20 }}
+                    </p>
+                    <div class="pt-3 border-top d-flex align-items-center justify-content-between">
+                        <span class="small text-muted"><i class="fa-solid fa-user-pen me-1"></i>{{ blog.author.get_full_name|default:blog.author.email|truncatechars:18 }}</span>
+                        <a href="{% url 'public_blog:detail' blog.slug %}" class="btn btn-outline-primary btn-sm rounded-pill px-3">
+                            Read Article <i class="fa-solid fa-arrow-right ms-1"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12 text-center py-5">
+            <div class="p-5 bg-white rounded-4 shadow-sm max-w-500 mx-auto">
+                <i class="fa-solid fa-book-open fa-3x text-muted opacity-50 mb-3"></i>
+                <h4 class="fw-bold text-secondary">No Matching Articles</h4>
+                <p class="text-muted mb-3">Try adjusting your search keywords to find relevant technical articles.</p>
+                <a href="{% url 'public_blog:list' %}" class="btn btn-primary rounded-pill px-4">View All Articles</a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    {% include 'public/_pagination.html' with page_obj=page_obj %}
+</section>
+{% endblock %}
