@@ -58,3 +58,6 @@ DEFAULT_FROM_EMAIL, CONTACT_NOTIFY_EMAIL = env('DEFAULT_FROM_EMAIL', default='CS
 CELERY_BROKER_URL = env('REDIS_URL', default='redis://localhost:6379/0')
 CACHES = {'default': {'BACKEND': 'django.core.cache.backends.locmem.LocMemCache', 'LOCATION': 'cseblog'}}
 CORS_ALLOWED_ORIGINS = env.list('CORS_ALLOWED_ORIGINS', default=[])
+VAPID_PUBLIC_KEY = env('VAPID_PUBLIC_KEY', default='BIsMieAq5b5k1hkNB9FFcsquqMsH-FWKHjMOsoyMGg0iFQZCh9eMg1BTeCZSoky3TMNSvZUTorGdzmRBDNXXi7o')
+VAPID_PRIVATE_KEY = env('VAPID_PRIVATE_KEY', default='N7NDup5zf1jIzyqUfr81XT8G9DsSJ5Dhyu-9muFaDhY')
+VAPID_ADMIN_EMAIL = env('VAPID_ADMIN_EMAIL', default='mailto:cse@valliammai.ac.in')

@@ -81,7 +81,7 @@
                     </div>
 
                     <!-- Publish Status -->
-                    <div class="form-check form-switch p-3 bg-white rounded-3 border">
+                    <div class="form-check form-switch p-3 bg-white rounded-3 border mb-3">
                         {{ form.is_published }}
                         <label class="form-check-label fw-semibold ms-2" for="{{ form.is_published.id_for_label }}">
                             <i class="fa-solid fa-globe text-success me-1"></i> Publish Immediately
@@ -89,6 +89,32 @@
                         <div class="small text-muted mt-1 ps-2">
                             Visible to all students on the public homepage.
                         </div>
+                    </div>
+
+                    <!-- Instant Phone Push Broadcast -->
+                    <div class="form-check form-switch p-3 bg-white rounded-3 border border-primary border-opacity-25" style="background: linear-gradient(135deg, #ffffff 0%, #f0f4ff 100%);">
+                        {{ form.send_push_notification }}
+                        <label class="form-check-label fw-bold text-primary ms-2 d-flex align-items-center justify-content-between" for="{{ form.send_push_notification.id_for_label }}">
+                            <span><i class="fa-solid fa-bell text-warning me-1"></i> Broadcast Push Alert</span>
+                        </label>
+                        <div class="d-flex align-items-center justify-content-between mt-2 pt-2 border-top border-light">
+                            <span class="badge bg-primary bg-opacity-10 text-primary border border-primary-subtle rounded-pill px-2.5 py-1" style="font-size: 0.75rem;">
+                                <i class="fa-solid fa-mobile-screen-button me-1"></i> {{ push_subscribers_count|default:"0" }} Subscribed Phones
+                            </span>
+                            {% if form.instance.push_count %}
+                            <span class="badge bg-success-subtle text-success rounded-pill px-2 py-0.5" style="font-size: 0.7rem;">
+                                Pushed {{ form.instance.push_count }}x
+                            </span>
+                            {% endif %}
+                        </div>
+                        <div class="small text-secondary mt-1.5" style="font-size: 0.78rem;">
+                            Sends instant lockscreen notification with sound & vibration to students' mobile devices.
+                        </div>
+                        {% if form.instance.last_pushed_at %}
+                        <div class="text-muted mt-1" style="font-size: 0.72rem;">
+                            <i class="fa-regular fa-clock me-1"></i> Last broadcast: {{ form.instance.last_pushed_at|date:'d M Y, h:i A' }}
+                        </div>
+                        {% endif %}
                     </div>
                 </div>
 

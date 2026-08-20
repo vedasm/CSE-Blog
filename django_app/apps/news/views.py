@@ -1,13 +1,35 @@
+import json
+import logging
+from django.conf import settings
 from django.contrib import messages
 from django.db.models import F, Q
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseBadRequest
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy
+from django.utils.decorators import method_decorator
 from django.views import View
+from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import CreateView, DeleteView, DetailView, ListView, UpdateView
 from apps.accounts.permissions import AdminRequiredMixin, EditorRequiredMixin
 from .forms import NewsForm
-from .models import NewsItem
+from .models import NewsItem, PushSubscription
+
+logger = logging.getLogger(__name__)
+
+
+def trigger_push_broadcast(news_id):
+    """Safely trigger push notification task via Celery or fallback synchronously."""
+    try:
+        from .tasks import send_news_push_notification
+        send_news_push_notification.delay(news_id)
+        logger.info("Queued Celery push notification task for News #%s", news_id)
+    except Exception as exc:
+        logger.warning("Celery queueing failed (%s). Executing push notification directly.", exc)
+        try:
+            from .tasks import send_news_push_notification
+            send_news_push_notification(news_id)
+        except Exception as direct_exc:
+            logger.error("Direct push notification failed: %s", direct_exc)
 
 
 # -------------------- Public Views -------------------- #
@@ -96,6 +118,68 @@ class NewsJsonFeedView(View):
         return JsonResponse({'news': data})
 
 
+# -------------------- Web Push Notification APIs -------------------- #
+
+class VapidPublicKeyView(View):
+    """Returns the public VAPID key so the client browser can subscribe to WebPush."""
+    def get(self, request, *args, **kwargs):
+        public_key = getattr(settings, 'VAPID_PUBLIC_KEY', '')
+        return JsonResponse({'publicKey': public_key})
+
+
+@method_decorator(csrf_exempt, name='dispatch')
+class PushSubscribeView(View):
+    """Receives PushSubscription details from browser Service Worker."""
+    def post(self, request, *args, **kwargs):
+        try:
+            payload = json.loads(request.body.decode('utf-8'))
+        except (ValueError, UnicodeDecodeError):
+            return HttpResponseBadRequest("Invalid JSON body")
+
+        endpoint = payload.get('endpoint')
+        keys = payload.get('keys', {})
+        p256dh = keys.get('p256dh')
+        auth = keys.get('auth')
+        category_filter = payload.get('category_filter', 'all')
+        user_agent = request.META.get('HTTP_USER_AGENT', '')[:255]
+
+        if not endpoint or not p256dh or not auth:
+            return HttpResponseBadRequest("Missing endpoint or cryptographic keys")
+
+        sub, created = PushSubscription.objects.update_or_create(
+            endpoint=endpoint,
+            defaults={
+                'p256dh': p256dh,
+                'auth': auth,
+                'category_filter': category_filter,
+                'user_agent': user_agent,
+                'is_active': True,
+            }
+        )
+
+        return JsonResponse({
+            'status': 'subscribed',
+            'created': created,
+            'id': sub.id
+        })
+
+
+@method_decorator(csrf_exempt, name='dispatch')
+class PushUnsubscribeView(View):
+    """Marks a student device's push subscription inactive."""
+    def post(self, request, *args, **kwargs):
+        try:
+            payload = json.loads(request.body.decode('utf-8'))
+        except (ValueError, UnicodeDecodeError):
+            return HttpResponseBadRequest("Invalid JSON body")
+
+        endpoint = payload.get('endpoint')
+        if endpoint:
+            PushSubscription.objects.filter(endpoint=endpoint).update(is_active=False)
+
+        return JsonResponse({'status': 'unsubscribed'})
+
+
 # -------------------- Admin Views -------------------- #
 
 class ManageNewsView(AdminRequiredMixin, ListView):
@@ -119,6 +203,7 @@ class ManageNewsView(AdminRequiredMixin, ListView):
         ctx['total_news'] = NewsItem.objects.count()
         ctx['pinned_news'] = NewsItem.objects.filter(is_pinned=True).count()
         ctx['published_news'] = NewsItem.objects.filter(is_published=True).count()
+        ctx['push_subscribers_count'] = PushSubscription.objects.filter(is_active=True).count()
         ctx['categories'] = NewsItem.Category.choices
         return ctx
 
@@ -128,9 +213,24 @@ class AddNewsView(EditorRequiredMixin, CreateView):
     form_class = NewsForm
     success_url = reverse_lazy('news:manage')
 
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        ctx['push_subscribers_count'] = PushSubscription.objects.filter(is_active=True).count()
+        return ctx
+
     def form_valid(self, form):
-        messages.success(self.request, 'News bulletin published successfully.')
-        return super().form_valid(form)
+        response = super().form_valid(form)
+        should_push = form.cleaned_data.get('send_push_notification', True)
+        if should_push and self.object.is_published:
+            trigger_push_broadcast(self.object.id)
+            sub_count = PushSubscription.objects.filter(is_active=True).count()
+            messages.success(
+                self.request,
+                f'News bulletin published & push notification broadcast dispatched to {sub_count} subscribed student phones.'
+            )
+        else:
+            messages.success(self.request, 'News bulletin published successfully.')
+        return response
 
 
 class EditNewsView(EditorRequiredMixin, UpdateView):
@@ -139,9 +239,24 @@ class EditNewsView(EditorRequiredMixin, UpdateView):
     form_class = NewsForm
     success_url = reverse_lazy('news:manage')
 
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        ctx['push_subscribers_count'] = PushSubscription.objects.filter(is_active=True).count()
+        return ctx
+
     def form_valid(self, form):
-        messages.success(self.request, 'News bulletin updated successfully.')
-        return super().form_valid(form)
+        response = super().form_valid(form)
+        should_push = form.cleaned_data.get('send_push_notification', False)
+        if should_push and self.object.is_published:
+            trigger_push_broadcast(self.object.id)
+            sub_count = PushSubscription.objects.filter(is_active=True).count()
+            messages.success(
+                self.request,
+                f'News bulletin updated & push notification broadcast dispatched to {sub_count} subscribed student phones.'
+            )
+        else:
+            messages.success(self.request, 'News bulletin updated successfully.')
+        return response
 
 
 class DeleteNewsView(EditorRequiredMixin, DeleteView):
@@ -160,4 +275,17 @@ class TogglePinNewsView(EditorRequiredMixin, View):
         item.save(update_fields=['is_pinned'])
         status_msg = 'pinned as urgent' if item.is_pinned else 'unpinned'
         messages.success(request, f'News "{item.title}" {status_msg}.')
+        return redirect('news:manage')
+
+
+class BroadcastNewsPushView(EditorRequiredMixin, View):
+    """Allows Super Admin to trigger a manual push broadcast on an existing published news item."""
+    def post(self, request, pk):
+        item = get_object_or_404(NewsItem, pk=pk, is_published=True)
+        trigger_push_broadcast(item.id)
+        sub_count = PushSubscription.objects.filter(is_active=True).count()
+        messages.success(
+            request,
+            f'Instant Push broadcast dispatched to {sub_count} student devices for "{item.title}".'
+        )
         return redirect('news:manage')

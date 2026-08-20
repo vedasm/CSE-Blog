@@ -1,104 +1,106 @@
 {% extends 'base_admin.html' %}
-{% block page_title %}Manage Department News & Bulletins{% endblock %}
+
+{% block title %}Manage News & Circulars | SRM Valliammai CSE{% endblock %}
+{% block page_title %}Department News, Circulars & Push Notifications{% endblock %}
+
+{% block header_actions %}
+{% if request.user.role != 'viewer' %}
+<a class="btn btn-primary" href="{% url 'news:add' %}">
+    <i class="fa-solid fa-plus me-1"></i> New Announcement
+</a>
+{% endif %}
+{% endblock %}
 
 {% block content %}
-<div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
-    <div class="d-flex flex-wrap align-items-center gap-3">
-        <form class="d-flex gap-2" method="get">
-            <input class="form-control" name="search" value="{{ request.GET.search }}" placeholder="Search news & circulars...">
-            {% if request.GET.category %}
-                <input type="hidden" name="category" value="{{ request.GET.category }}">
-            {% endif %}
-            <button class="btn btn-outline-primary" type="submit">
-                <i class="fa-solid fa-magnifying-glass"></i>
-            </button>
-            {% if request.GET.search or request.GET.category %}
-                <a href="{% url 'news:manage' %}" class="btn btn-light" title="Reset Filters">
-                    <i class="fa-solid fa-xmark"></i>
-                </a>
-            {% endif %}
-        </form>
-
-        <div class="dropdown">
-            <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                <i class="fa-solid fa-filter me-1"></i>
-                {% if request.GET.category %}
-                    {{ request.GET.category|title }}
-                {% else %}
-                    All Categories
-                {% endif %}
-            </button>
-            <ul class="dropdown-menu shadow">
-                <li><a class="dropdown-item {% if not request.GET.category %}active{% endif %}" href="{% url 'news:manage' %}">All Categories</a></li>
-                <li><hr class="dropdown-divider"></li>
-                {% for code, label in categories %}
-                    <li>
-                        <a class="dropdown-item {% if request.GET.category == code %}active{% endif %}" href="?category={{ code }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">
-                            {{ label }}
-                        </a>
-                    </li>
-                {% endfor %}
-            </ul>
+<!-- Search and Filter Bar -->
+<div class="card p-3 mb-4 border-0 shadow-sm bg-white">
+    <form method="get" class="row g-2 align-items-center">
+        <div class="col-md-5">
+            <div class="input-group">
+                <span class="input-group-text bg-light border-end-0"><i class="fa-solid fa-magnifying-glass text-muted"></i></span>
+                <input type="text" name="search" class="form-control border-start-0 bg-light" placeholder="Search by headline or keywords..." value="{{ request.GET.search }}">
+            </div>
         </div>
-    </div>
-
-    {% if request.user.role != 'viewer' %}
-    <a class="btn btn-success px-4" href="{% url 'news:add' %}">
-        <i class="fa-solid fa-plus me-1"></i> Add News Bulletin
-    </a>
-    {% endif %}
+        <div class="col-md-4">
+            <select name="category" class="form-select bg-light" onchange="this.form.submit()">
+                <option value="">All Categories</option>
+                {% for code, label in categories %}
+                    <option value="{{ code }}" {% if request.GET.category == code %}selected{% endif %}>{{ label }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-3 d-flex gap-2">
+            <button type="submit" class="btn btn-primary flex-grow-1">Filter</button>
+            {% if request.GET.search or request.GET.category %}
+                <a href="{% url 'news:manage' %}" class="btn btn-outline-secondary" title="Reset Filters"><i class="fa-solid fa-rotate-left"></i></a>
+            {% endif %}
+        </div>
+    </form>
 </div>
 
 <!-- Stats Row -->
 <div class="row g-3 mb-4">
-    <div class="col-md-4">
-        <div class="card p-3 border-0 shadow-sm bg-white">
+    <div class="col-md-3 col-6">
+        <div class="card p-3 border-0 shadow-sm bg-white rounded-3 h-100">
             <div class="d-flex align-items-center gap-3">
                 <div class="p-2 bg-primary bg-opacity-10 text-primary rounded-circle">
                     <i class="fa-solid fa-bullhorn fa-lg"></i>
                 </div>
                 <div>
                     <h4 class="mb-0 fw-bold">{{ total_news }}</h4>
-                    <span class="text-muted small">Total Announcements</span>
+                    <span class="text-muted small">Total Bulletins</span>
                 </div>
             </div>
         </div>
     </div>
-    <div class="col-md-4">
-        <div class="card p-3 border-0 shadow-sm bg-white">
+    <div class="col-md-3 col-6">
+        <div class="card p-3 border-0 shadow-sm bg-white rounded-3 h-100">
             <div class="d-flex align-items-center gap-3">
                 <div class="p-2 bg-danger bg-opacity-10 text-danger rounded-circle">
                     <i class="fa-solid fa-thumbtack fa-lg"></i>
                 </div>
                 <div>
                     <h4 class="mb-0 fw-bold">{{ pinned_news }}</h4>
-                    <span class="text-muted small">Urgent / Pinned Bulletins</span>
+                    <span class="text-muted small">Urgent Bulletins</span>
                 </div>
             </div>
         </div>
     </div>
-    <div class="col-md-4">
-        <div class="card p-3 border-0 shadow-sm bg-white">
+    <div class="col-md-3 col-6">
+        <div class="card p-3 border-0 shadow-sm bg-white rounded-3 h-100">
             <div class="d-flex align-items-center gap-3">
                 <div class="p-2 bg-success bg-opacity-10 text-success rounded-circle">
                     <i class="fa-solid fa-check-double fa-lg"></i>
                 </div>
                 <div>
                     <h4 class="mb-0 fw-bold">{{ published_news }}</h4>
-                    <span class="text-muted small">Active on Public Portal</span>
+                    <span class="text-muted small">Active on Portal</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 col-6">
+        <div class="card p-3 border-0 shadow-sm bg-white rounded-3 h-100 border-start border-primary border-3">
+            <div class="d-flex align-items-center gap-3">
+                <div class="p-2 bg-primary bg-opacity-10 text-primary rounded-circle">
+                    <i class="fa-solid fa-mobile-screen-button fa-lg"></i>
+                </div>
+                <div>
+                    <h4 class="mb-0 fw-bold text-primary">{{ push_subscribers_count|default:"0" }}</h4>
+                    <span class="text-muted small">Subscribed Phones</span>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-<div class="card shadow-sm border-0 overflow-hidden">
+<div class="card shadow-sm border-0 overflow-hidden rounded-4">
     <div class="table-responsive">
         <table class="table table-modern align-middle mb-0">
             <thead>
                 <tr>
                     <th style="width: 40px;">Pin</th>
-                    <th>Title & Category</th>
+                    <th>Title & Summary</th>
                     <th>Category</th>
                     <th>Date Published</th>
                     <th>Attachment / Link</th>
@@ -128,7 +130,14 @@
                         {% endif %}
                     </td>
                     <td>
-                        <div class="fw-bold text-dark">{{ item.title }}</div>
+                        <div class="d-flex align-items-center gap-1.5 flex-wrap">
+                            <span class="fw-bold text-dark">{{ item.title }}</span>
+                            {% if item.push_count %}
+                                <span class="badge bg-primary-subtle text-primary border border-primary-subtle rounded-pill px-1.5 py-0.5" style="font-size: 0.65rem;" title="Push notification sent {{ item.push_count }} times">
+                                    <i class="fa-solid fa-bell me-1"></i>{{ item.push_count }}
+                                </span>
+                            {% endif %}
+                        </div>
                         <div class="small text-muted">{{ item.summary|truncatewords:14 }}</div>
                     </td>
                     <td>
@@ -175,10 +184,18 @@
                                 <i class="fa-solid fa-eye"></i>
                             </a>
                             {% if request.user.role != 'viewer' %}
+                            {% if item.is_published %}
+                            <form class="d-inline m-0" method="post" action="{% url 'news:broadcast_push' item.pk %}" onsubmit="return confirm('Broadcast an instant phone push notification to all subscribed student phones for: \'{{ item.title|escapejs }}\'?');">
+                                {% csrf_token %}
+                                <button class="btn btn-outline-primary btn-sm" type="submit" title="Broadcast Instant Phone Notification">
+                                    <i class="fa-solid fa-bell"></i>
+                                </button>
+                            </form>
+                            {% endif %}
                             <a class="btn btn-outline-warning btn-sm" href="{% url 'news:edit' item.pk %}" title="Edit News">
                                 <i class="fa-solid fa-pen-to-square"></i>
                             </a>
-                            <form class="d-inline" method="post" action="{% url 'news:delete' item.pk %}" data-confirm="Are you sure you want to delete this bulletin?">
+                            <form class="d-inline m-0" method="post" action="{% url 'news:delete' item.pk %}" onsubmit="return confirm('Are you sure you want to delete this bulletin?');">
                                 {% csrf_token %}
                                 <button class="btn btn-outline-danger btn-sm" type="submit" title="Delete News">
                                     <i class="fa-solid fa-trash"></i>

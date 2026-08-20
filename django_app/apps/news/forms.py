@@ -3,6 +3,14 @@ from .models import NewsItem
 
 
 class NewsForm(forms.ModelForm):
+    send_push_notification = forms.BooleanField(
+        required=False,
+        initial=True,
+        label='Send Instant Phone Push Notification to Students',
+        help_text='Broadcast this bulletin as an instant push notification to all subscribed student phones & devices.',
+        widget=forms.CheckboxInput(attrs={'class': 'form-check-input'})
+    )
+
     class Meta:
         model = NewsItem
         fields = [

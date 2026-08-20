@@ -45,6 +45,8 @@ class NewsItem(models.Model):
     is_published = models.BooleanField(default=True)
     published_at = models.DateTimeField(default=timezone.now)
     views_count = models.PositiveIntegerField(default=0)
+    last_pushed_at = models.DateTimeField(null=True, blank=True, help_text='Timestamp of the last web push broadcast')
+    push_count = models.PositiveIntegerField(default=0, help_text='Number of times push broadcast was sent')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -72,3 +74,27 @@ class NewsItem(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class PushSubscription(models.Model):
+    endpoint = models.URLField(max_length=500, unique=True, help_text='W3C Push Service endpoint URL')
+    p256dh = models.CharField(max_length=255, help_text='Client public key for encryption')
+    auth = models.CharField(max_length=255, help_text='Authentication secret')
+    user_agent = models.CharField(max_length=255, blank=True, help_text='Browser / OS metadata')
+    category_filter = models.CharField(
+        max_length=30,
+        default='all',
+        help_text='Subscribed category filter (e.g. all, placement, circular)'
+    )
+    is_active = models.BooleanField(default=True, help_text='Whether this subscription is active')
+    created_at = models.DateTimeField(auto_now_add=True)
+    last_notified_at = models.DateTimeField(null=True, blank=True)
+
+    class Meta:
+        ordering = ['-created_at']
+        verbose_name = 'Push Subscription'
+        verbose_name_plural = 'Push Subscriptions'
+
+    def __str__(self):
+        return f"Subscription ({self.created_at.strftime('%Y-%m-%d')} - {self.category_filter})"
+
