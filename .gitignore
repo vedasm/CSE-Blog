@@ -219,3 +219,12 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# IDE & AI Assistant Local Settings
+.claude/
+.agents/
+.gemini/
+.vscode/
+.idea/
+New folder/
+django_app/media/
