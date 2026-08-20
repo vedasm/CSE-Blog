@@ -42,8 +42,17 @@
                     <a href="{% url 'public_blog:list' %}" class="btn btn-warning btn-lg px-4 py-2.5 rounded-pill fw-semibold shadow-lg btn-glow d-inline-flex align-items-center gap-2">
                         <i class="fa-solid fa-book-open-reader"></i> Explore Tech Blogs
                     </a>
-                    <a href="#departmentCalendarSection" class="btn btn-outline-light btn-lg px-4 py-2.5 rounded-pill fw-semibold backdrop-blur d-inline-flex align-items-center gap-2">
-                        <i class="fa-solid fa-calendar-days text-primary"></i> Academic Calendar
+                    {% if request.user.is_authenticated and request.user.role == 'student' %}
+                    <a href="{% url 'public_blog:my_blogs' %}" class="btn btn-primary btn-lg px-4 py-2.5 rounded-pill fw-semibold shadow-lg d-inline-flex align-items-center gap-2">
+                        <i class="fa-solid fa-graduation-cap"></i> My Student Portal
+                    </a>
+                    {% else %}
+                    <a href="{% url 'student_accounts:login' %}" class="btn btn-primary btn-lg px-4 py-2.5 rounded-pill fw-semibold shadow-lg d-inline-flex align-items-center gap-2">
+                        <i class="fa-solid fa-graduation-cap"></i> Student Portal & Writing
+                    </a>
+                    {% endif %}
+                    <a href="#departmentCalendarSection" class="btn btn-outline-light btn-lg px-3.5 py-2.5 rounded-pill fw-semibold backdrop-blur d-inline-flex align-items-center gap-2">
+                        <i class="fa-solid fa-calendar-days text-primary"></i> Calendar
                     </a>
                     <a href="#newsSection" class="btn btn-outline-light btn-lg px-3.5 py-2.5 rounded-pill fw-semibold backdrop-blur d-inline-flex align-items-center gap-2">
                         <i class="fa-solid fa-bullhorn text-warning"></i> News Board
@@ -677,7 +686,16 @@
                 <span class="badge bg-primary bg-opacity-10 text-primary rounded-pill px-3 py-1 text-uppercase fw-semibold mb-2">Department Portals & Official Archives</span>
                 <h2 class="display-6 fw-bold text-dark font-heading mb-0">Department Records & Publications</h2>
             </div>
-            <div class="d-flex gap-2">
+            <div class="d-flex flex-wrap gap-2">
+                {% if request.user.is_authenticated and request.user.role == 'student' %}
+                <a href="{% url 'public_blog:my_blogs' %}" class="btn btn-primary btn-sm rounded-pill px-3 py-1.5 fw-semibold shadow-xs">
+                    <i class="fa-solid fa-graduation-cap me-1"></i> My Portal
+                </a>
+                {% else %}
+                <a href="{% url 'student_accounts:login' %}" class="btn btn-primary btn-sm rounded-pill px-3 py-1.5 fw-semibold shadow-xs">
+                    <i class="fa-solid fa-graduation-cap me-1"></i> Student Portal
+                </a>
+                {% endif %}
                 <a href="{% url 'core:placements' %}" class="btn btn-outline-primary btn-sm rounded-pill px-3 py-1.5 fw-semibold">
                     <i class="fa-solid fa-briefcase me-1"></i> Placements
                 </a>
@@ -694,8 +712,35 @@
         </div>
 
         <div class="row g-4">
-            <!-- Card 1: Placements -->
-            <div class="col-md-6 col-lg-3">
+            <!-- Card 1: Student Writing Portal -->
+            <div class="col-md-6 col-lg-4">
+                <div class="card border-0 rounded-4 shadow-sm p-4 bg-light h-100 d-flex flex-column justify-content-between border-start border-4 border-primary">
+                    <div>
+                        <div class="d-flex align-items-center justify-content-between mb-3">
+                            <div class="rounded-3 bg-primary bg-opacity-10 text-primary p-2.5 d-flex align-items-center justify-content-center">
+                                <i class="fa-solid fa-graduation-cap fa-xl"></i>
+                            </div>
+                            <span class="badge bg-primary-subtle text-primary border border-primary-subtle rounded-pill px-2.5 py-1 fw-bold">Student Portal</span>
+                        </div>
+                        <h5 class="fw-bold text-dark font-heading mb-2">Student Articles & Portal</h5>
+                        <p class="text-secondary small mb-3">
+                            Publish technical articles, tutorials, and project writeups. Manage drafts and track real-time faculty approval status.
+                        </p>
+                    </div>
+                    {% if request.user.is_authenticated and request.user.role == 'student' %}
+                    <a href="{% url 'public_blog:my_blogs' %}" class="btn btn-primary btn-sm rounded-pill w-100 fw-semibold">
+                        Go to My Dashboard <i class="fa-solid fa-arrow-right ms-1"></i>
+                    </a>
+                    {% else %}
+                    <a href="{% url 'student_accounts:login' %}" class="btn btn-primary btn-sm rounded-pill w-100 fw-semibold">
+                        Student Login / Write Blog <i class="fa-solid fa-arrow-right ms-1"></i>
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Card 2: Placements -->
+            <div class="col-md-6 col-lg-4">
                 <div class="card border-0 rounded-4 shadow-sm p-4 bg-light h-100 d-flex flex-column justify-content-between">
                     <div>
                         <div class="d-flex align-items-center justify-content-between mb-3">
@@ -715,8 +760,8 @@
                 </div>
             </div>
 
-            <!-- Card 2: Research & Journals -->
-            <div class="col-md-6 col-lg-3">
+            <!-- Card 3: Research & Journals -->
+            <div class="col-md-6 col-lg-4">
                 <div class="card border-0 rounded-4 shadow-sm p-4 bg-light h-100 d-flex flex-column justify-content-between">
                     <div>
                         <div class="d-flex align-items-center justify-content-between mb-3">
@@ -736,8 +781,8 @@
                 </div>
             </div>
 
-            <!-- Card 3: Achievements -->
-            <div class="col-md-6 col-lg-3">
+            <!-- Card 4: Achievements -->
+            <div class="col-md-6 col-lg-4">
                 <div class="card border-0 rounded-4 shadow-sm p-4 bg-light h-100 d-flex flex-column justify-content-between">
                     <div>
                         <div class="d-flex align-items-center justify-content-between mb-3">
@@ -757,8 +802,8 @@
                 </div>
             </div>
 
-            <!-- Card 4: Computing Labs -->
-            <div class="col-md-6 col-lg-3">
+            <!-- Card 5: Computing Labs -->
+            <div class="col-md-6 col-lg-4">
                 <div class="card border-0 rounded-4 shadow-sm p-4 bg-light h-100 d-flex flex-column justify-content-between">
                     <div>
                         <div class="d-flex align-items-center justify-content-between mb-3">
@@ -778,8 +823,8 @@
                 </div>
             </div>
 
-            <!-- Card 5: Alumni (SHIMMER) -->
-            <div class="col-md-6 col-lg-3">
+            <!-- Card 6: Alumni (SHIMMER) -->
+            <div class="col-md-6 col-lg-4">
                 <div class="card border-0 rounded-4 shadow-sm p-4 bg-light h-100 d-flex flex-column justify-content-between">
                     <div>
                         <div class="d-flex align-items-center justify-content-between mb-3">

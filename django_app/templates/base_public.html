@@ -120,6 +120,17 @@
                             <i class="fa-solid fa-bell me-1"></i> Circulars
                         </a>
                     </li>
+                    <li class="nav-item ms-lg-2">
+                        {% if request.user.is_authenticated and request.user.role == 'student' %}
+                        <a href="{% url 'public_blog:my_blogs' %}" class="btn btn-sm btn-primary rounded-pill px-3 py-2 fw-semibold shadow-xs">
+                            <i class="fa-solid fa-graduation-cap me-1"></i> My Portal
+                        </a>
+                        {% else %}
+                        <a href="{% url 'student_accounts:login' %}" class="btn btn-sm btn-outline-light rounded-pill px-3 py-2 fw-semibold shadow-xs">
+                            <i class="fa-solid fa-graduation-cap me-1"></i> Student Portal
+                        </a>
+                        {% endif %}
+                    </li>
                 </ul>
             </div>
         </div>
@@ -197,7 +208,16 @@
                 </li>
             </ul>
 
-            <div class="mt-4 pt-3 border-top">
+            <div class="mt-4 pt-3 border-top d-flex flex-column gap-2">
+                {% if request.user.is_authenticated and request.user.role == 'student' %}
+                <a href="{% url 'public_blog:my_blogs' %}" class="btn btn-primary w-100 rounded-pill py-2">
+                    <i class="fa-solid fa-graduation-cap me-1"></i> My Student Portal
+                </a>
+                {% else %}
+                <a href="{% url 'student_accounts:login' %}" class="btn btn-primary w-100 rounded-pill py-2">
+                    <i class="fa-solid fa-graduation-cap me-1"></i> Student Portal Login
+                </a>
+                {% endif %}
                 <a href="/admin/login/" class="btn btn-outline-light w-100 rounded-pill py-2">
                     <i class="fa-solid fa-lock me-1"></i> Admin & Faculty Login
                 </a>
@@ -294,11 +314,17 @@
                 <div class="col-lg-3 col-md-6 col-6">
                     <h6 class="fw-bold text-white text-uppercase tracking-wider mb-3">Student Hub</h6>
                     <ul class="list-unstyled footer-links mb-0">
+                        {% if request.user.is_authenticated and request.user.role == 'student' %}
+                        <li><a href="{% url 'public_blog:my_blogs' %}" class="text-warning fw-semibold"><i class="fa-solid fa-graduation-cap me-1"></i> My Student Portal</a></li>
+                        <li><a href="{% url 'public_blog:create' %}"><i class="fa-solid fa-pen-nib me-1"></i> Write a Tech Blog</a></li>
+                        {% else %}
+                        <li><a href="{% url 'student_accounts:login' %}" class="text-warning fw-semibold"><i class="fa-solid fa-graduation-cap me-1"></i> Student Portal Login</a></li>
+                        <li><a href="{% url 'student_accounts:register' %}"><i class="fa-solid fa-user-plus me-1"></i> Student Registration</a></li>
+                        {% endif %}
                         <li><a href="{% url 'public_news:list' %}?category=placement">Placement Notices</a></li>
                         <li><a href="{% url 'public_news:list' %}?category=exam">Exam Schedules</a></li>
                         <li><a href="{% url 'public_news:list' %}?category=hackathon">Hackathon Alerts</a></li>
                         <li><a href="{% url 'public_news:list' %}?category=circular">College Circulars</a></li>
-                        <li><a href="{% url 'contact:contact' %}">Student Grievances</a></li>
                     </ul>
                 </div>
 
