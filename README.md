@@ -138,7 +138,7 @@ Choose one of the following methods to run the stack:
 | **Operating System** | Windows, Linux, or macOS | Windows, Linux, or macOS |
 | **Container Engine** | Docker Engine & Docker Compose | N/A |
 | **Python** | Bundled in Docker (3.12) | Python 3.12+ installed |
-| **Database** | Bundled in Docker (PostgreSQL 16) | PostgreSQL 16 server running |
+| **Database** | Supabase PostgreSQL (recommended) or the bundled PostgreSQL service | Supabase PostgreSQL or PostgreSQL 16 |
 | **Message Broker** | Bundled in Docker (Redis 7) | Redis 7 server running |
 
 ---
@@ -157,12 +157,13 @@ Choose one of the following methods to run the stack:
 | `SECRET_KEY` | Django cryptographic secret key | *Random 64-char string* |
 | `DEBUG` | Debug mode (`True` for dev, `False` for prod) | `True` |
 | `ALLOWED_HOSTS` | Comma-separated allowed hostnames | `localhost,127.0.0.1` |
-| `DB_NAME` | PostgreSQL database name | `cseblog_db` |
-| `DB_USER` | PostgreSQL username | `cseblog_user` |
+| `DB_NAME` | PostgreSQL database name used by the fallback configuration | `postgres` |
+| `DB_USER` | PostgreSQL username used by the fallback configuration | `postgres` |
 | `DB_PASSWORD` | PostgreSQL password | `your_secure_password` |
-| `DB_HOST` | Database host (`postgres` for Docker, `localhost` for local) | `postgres` |
+| `DB_HOST` | Database host used by the fallback configuration | `db.your-project-ref.supabase.co` |
 | `DB_PORT` | Database port | `5432` |
-| `DATABASE_URL` | SQLAlchemy URL for FastAPI | `postgresql://user:pass@postgres:5432/db` |
+| `DATABASE_URL` | Shared Django and FastAPI PostgreSQL URL; use Supabase’s pooler on port `6543` | `postgres://postgres.project-ref:password@aws-0-region.pooler.supabase.com:6543/postgres?sslmode=require` |
+| `POSTGRES_URL_NON_POOLING` | Optional direct Supabase PostgreSQL URL for migrations or administrative work | `postgres://postgres.project-ref:password@db.project-ref.supabase.co:5432/postgres?sslmode=require` |
 | `REDIS_URL` | Redis broker and cache connection URI | `redis://redis:6379/0` |
 | `VAPID_PUBLIC_KEY` | Public key for WebPush browser registration | *Base64 URL-safe key* |
 | `VAPID_PRIVATE_KEY` | Private key for Celery push encryption | *Base64 URL-safe key* |
