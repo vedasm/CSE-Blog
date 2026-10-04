@@ -116,6 +116,64 @@ a {
     border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
+/* Keep admin bulletin switches inside their settings cards. */
+.news-toggle-card {
+    position: relative;
+    padding-left: 3.75rem !important;
+}
+
+.news-toggle-card .form-check-input {
+    left: 1rem;
+    top: 1.25rem;
+    margin-left: 0;
+}
+
+.news-toggle-card .form-check-label {
+    margin-left: 0 !important;
+}
+
+.top-news-ticker {
+    min-width: 0;
+    flex: 1 1 auto;
+    flex-wrap: nowrap;
+}
+
+.top-news-ticker-viewport {
+    min-width: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    flex: 1 1 auto;
+}
+
+.top-news-ticker-track {
+    display: inline-flex;
+    gap: 2.5rem;
+    width: max-content;
+    min-width: max-content;
+    white-space: nowrap;
+    will-change: transform;
+    animation: marqueeScroll 8s linear infinite;
+}
+
+.top-news-ticker-track.is-empty {
+    animation: none;
+}
+
+.top-news-ticker-item {
+    display: inline-flex;
+    align-items: center;
+    flex: 0 0 auto;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #f8fafc;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .top-news-ticker-track {
+        animation: none;
+    }
+}
+
 /* -------------------- Live Pulse Indicator -------------------- */
 .live-pulse-dot {
     display: inline-block;
@@ -1297,4 +1355,3 @@ a {
     background: #EDF2F7 !important;
     color: #334155 !important;
 }
-
