@@ -112,11 +112,6 @@
                         </a>
                     </li>
                     <li class="nav-item ms-lg-2">
-                        <a href="{% url 'public_news:list' %}" class="btn btn-sm btn-warning rounded-pill px-3 py-2 fw-semibold shadow-xs">
-                            <i class="fa-solid fa-bell me-1"></i> Circulars
-                        </a>
-                    </li>
-                    <li class="nav-item ms-lg-2">
                         {% if request.user.is_authenticated and request.user.role == 'student' %}
                         <a href="{% url 'public_blog:my_blogs' %}" class="btn btn-sm btn-primary rounded-pill px-3 py-2 fw-semibold shadow-xs">
                             <i class="fa-solid fa-graduation-cap me-1"></i> My Portal
