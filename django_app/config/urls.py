@@ -3,6 +3,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.http import HttpResponse
+from django.shortcuts import redirect
 from django.urls import include, path
 
 
@@ -18,6 +19,10 @@ def service_worker(request):
     return HttpResponse("// sw.js not found", content_type='application/javascript', status=404)
 
 
+def admin_dashboard_redirect(request):
+    return redirect('core:dashboard')
+
+
 urlpatterns = [
     path('sw.js', service_worker, name='service_worker'),
     path('django-admin/', admin.site.urls), path('', include('apps.core.urls')),
@@ -25,6 +30,7 @@ urlpatterns = [
     path('blogs/', include('apps.blog.urls')), path('events/', include('apps.events.urls')),
     path('news/', include('apps.news.urls')),
     path('faculty/', include('apps.faculty.urls')), path('contact/', include('apps.contact.urls')),
+    path('admin/', admin_dashboard_redirect, name='admin_root'),
     path('admin/', include('apps.accounts.urls')), path('admin/', include('apps.core.admin_urls')),
     path('admin/', include('apps.blog.admin_urls')),
     path('admin/', include('apps.events.admin_urls')), path('admin/', include('apps.faculty.admin_urls')),
