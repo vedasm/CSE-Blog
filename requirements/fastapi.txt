@@ -1,12 +1,12 @@
-fastapi==0.111.*
+fastapi
 uvicorn[standard]
-sqlalchemy==2.0.*
+sqlalchemy
 alembic
 asyncpg
 python-jose[cryptography]
 passlib[bcrypt]
 python-multipart
 httpx
-pydantic==2.*
+pydantic
 fastapi-mail
 email-validator

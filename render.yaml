@@ -1,0 +1,44 @@
+services:
+  - type: web
+    name: cse-blog-django
+    runtime: docker
+    plan: free
+    dockerfilePath: ./django_app/Dockerfile
+    dockerCommand: sh -c "cd django_app && python manage.py migrate --noinput && python manage.py collectstatic --noinput && gunicorn config.wsgi:application --bind 0.0.0.0:$PORT"
+    healthCheckPath: /
+    envVars:
+      - key: DATABASE_URL
+        sync: false
+      - key: SECRET_KEY
+        sync: false
+      - key: JWT_SECRET_KEY
+        sync: false
+      - key: DEBUG
+        value: "False"
+      - key: DJANGO_SETTINGS_MODULE
+        value: config.settings.prod
+      - key: ALLOWED_HOSTS
+        value: cse-blog-django.onrender.com
+      - key: SESSION_COOKIE_SECURE
+        value: "True"
+      - key: CSRF_COOKIE_SECURE
+        value: "True"
+      - key: REDIS_URL
+        sync: false
+      - key: MEDIA_ROOT
+        value: /app/django_app/media
+      - key: STATIC_ROOT
+        value: /app/django_app/staticfiles
+
+  - type: web
+    name: cse-blog-fastapi
+    runtime: docker
+    plan: free
+    dockerfilePath: ./fastapi_app/Dockerfile
+    dockerCommand: sh -c "cd fastapi_app && uvicorn main:app --host 0.0.0.0 --port $PORT"
+    healthCheckPath: /healthz
+    envVars:
+      - key: DATABASE_URL
+        sync: false
+      - key: JWT_SECRET_KEY
+        sync: false
