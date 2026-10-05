@@ -4,3 +4,4 @@ WORKDIR /app
 COPY requirements/fastapi.txt /tmp/requirements.txt
 RUN pip install --no-cache-dir -r /tmp/requirements.txt
 COPY . /app
+CMD ["sh", "-c", "uvicorn --app-dir fastapi_app main:app --host 0.0.0.0 --port ${PORT:-10000}"]

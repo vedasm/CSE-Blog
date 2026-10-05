@@ -4,7 +4,6 @@ services:
     runtime: docker
     plan: free
     dockerfilePath: ./django_app/Dockerfile
-    dockerCommand: gunicorn --chdir django_app config.wsgi:application --bind 0.0.0.0:$PORT
     healthCheckPath: /
     envVars:
       - key: DATABASE_URL
@@ -35,7 +34,6 @@ services:
     runtime: docker
     plan: free
     dockerfilePath: ./fastapi_app/Dockerfile
-    dockerCommand: uvicorn --app-dir fastapi_app main:app --host 0.0.0.0 --port $PORT
     healthCheckPath: /healthz
     envVars:
       - key: DATABASE_URL
