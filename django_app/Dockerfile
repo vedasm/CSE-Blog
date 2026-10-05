@@ -4,4 +4,4 @@ WORKDIR /app
 COPY requirements/django.txt /tmp/requirements.txt
 RUN pip install --no-cache-dir -r /tmp/requirements.txt
 COPY . /app
-CMD ["sh", "-c", "gunicorn --chdir django_app config.wsgi:application --bind 0.0.0.0:${PORT:-10000}"]
+CMD ["sh", "-c", "python django_app/manage.py migrate --noinput --settings=config.settings.prod && exec gunicorn --chdir django_app config.wsgi:application --bind 0.0.0.0:${PORT:-10000}"]
