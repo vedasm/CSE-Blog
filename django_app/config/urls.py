@@ -38,5 +38,6 @@ urlpatterns = [
     path('admin/', include('apps.gallery.urls')), path('admin/', include('apps.contact.admin_urls')),
     path('ckeditor/', include('ckeditor_uploader.urls')),
 ]
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+# Render does not provide a separate media server. Serve uploaded files through
+# Django so every FileField URL works without a paid persistent disk.
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
