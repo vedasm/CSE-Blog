@@ -24,10 +24,7 @@ services:
       - key: CSRF_COOKIE_SECURE
         value: "True"
       - key: REDIS_URL
-        fromService:
-          name: cse-blog-redis
-          type: keyvalue
-          property: connectionString
+        sync: false
       - key: MEDIA_ROOT
         value: /app/django_app/media
       - key: STATIC_ROOT
@@ -45,8 +42,3 @@ services:
         sync: false
       - key: JWT_SECRET_KEY
         sync: false
-
-  - type: keyvalue
-    name: cse-blog-redis
-    plan: starter
-    ipAllowList: []
