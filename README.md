@@ -320,24 +320,12 @@ Before deploying to production:
 
 ### Persistent uploaded files on Render
 
-Render's service filesystem is ephemeral, so configure an S3-compatible bucket
-before uploading documents, images, or attachments in the admin panel. The
-application automatically uses external storage when all three credentials
-below are set:
-
-```text
-AWS_STORAGE_BUCKET_NAME
-AWS_ACCESS_KEY_ID
-AWS_SECRET_ACCESS_KEY
-```
-
-For Cloudflare R2, also set `AWS_S3_ENDPOINT_URL` to the R2 S3 API endpoint and
-set `AWS_S3_CUSTOM_DOMAIN` to the public bucket or custom-domain URL. For an
-AWS S3 bucket, configure the bucket for public reads or use signed URLs by
-setting `AWS_QUERYSTRING_AUTH=True`. Do not commit these values; add them as
-secret environment variables in Render. Existing `/media/` files must be
-uploaded again because files already lost from the ephemeral filesystem cannot
-be recovered.
+Render's service filesystem is ephemeral. This project stores uploads in the
+configured PostgreSQL database, so documents, images, and attachments survive
+restarts and redeployments without an external storage service. Large files
+increase database usage; use direct external URLs for files that should not be
+stored in PostgreSQL. Existing files already lost from Render's filesystem must
+be uploaded again.
 
 ---
 

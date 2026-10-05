@@ -1,8 +1,8 @@
 import os
 from django.conf import settings
-from django.conf.urls.static import static
 from django.contrib import admin
-from django.http import HttpResponse
+from django.core.files.storage import default_storage
+from django.http import FileResponse, Http404, HttpResponse
 from django.shortcuts import redirect
 from django.urls import include, path
 
@@ -23,7 +23,14 @@ def admin_dashboard_redirect(request):
     return redirect('core:dashboard')
 
 
+def media_file(request, path):
+    if not default_storage.exists(path):
+        raise Http404
+    return FileResponse(default_storage.open(path), as_attachment=False)
+
+
 urlpatterns = [
+    path('media/<path:path>', media_file, name='media_file'),
     path('sw.js', service_worker, name='service_worker'),
     path('django-admin/', admin.site.urls), path('', include('apps.core.urls')),
     path('student/', include('apps.accounts.student_urls')),
@@ -38,6 +45,3 @@ urlpatterns = [
     path('admin/', include('apps.gallery.urls')), path('admin/', include('apps.contact.admin_urls')),
     path('ckeditor/', include('ckeditor_uploader.urls')),
 ]
-# Render does not provide a separate media server. Serve uploaded files through
-# Django so every FileField URL works without a paid persistent disk.
-urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
