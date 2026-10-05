@@ -49,3 +49,4 @@ services:
   - type: keyvalue
     name: cse-blog-redis
     plan: starter
+    ipAllowList: []
