@@ -36,7 +36,7 @@ class Command(BaseCommand):
                 'category': DepartmentDocument.Category.RESEARCH,
                 'academic_year': '2022-2023',
                 'description': 'Scopus, Web of Science, and Anna University listed journal publications by CSE faculty and research scholars.',
-                'external_url': 'https://digitalveda.co.in/srm-valliammai/uploads/51ba570fe68fc088e0a942bdf8700cdce7eb8b1d/1775901940srm-vec-cse-list-of-journals-from-july-2022-june-2023.pdf',
+                'external_url': '/static/documents/journal_22-23.pdf',
                 'display_order': 1,
             },
             {
