@@ -70,9 +70,9 @@
                     </h6>
 
                     <!-- Urgent / Pinned Checkbox -->
-                    <div class="form-check form-switch p-3 bg-white rounded-3 border mb-3">
+                    <div class="form-check form-switch news-toggle-card p-3 bg-white rounded-3 border mb-3">
                         {{ form.is_pinned }}
-                        <label class="form-check-label fw-semibold ms-2" for="{{ form.is_pinned.id_for_label }}">
+                        <label class="form-check-label fw-semibold" for="{{ form.is_pinned.id_for_label }}">
                             <i class="fa-solid fa-thumbtack text-danger me-1"></i> Urgent / Pinned Bulletin
                         </label>
                         <div class="small text-muted mt-1 ps-2">
@@ -81,9 +81,9 @@
                     </div>
 
                     <!-- Publish Status -->
-                    <div class="form-check form-switch p-3 bg-white rounded-3 border mb-3">
+                    <div class="form-check form-switch news-toggle-card p-3 bg-white rounded-3 border mb-3">
                         {{ form.is_published }}
-                        <label class="form-check-label fw-semibold ms-2" for="{{ form.is_published.id_for_label }}">
+                        <label class="form-check-label fw-semibold" for="{{ form.is_published.id_for_label }}">
                             <i class="fa-solid fa-globe text-success me-1"></i> Publish Immediately
                         </label>
                         <div class="small text-muted mt-1 ps-2">
@@ -92,9 +92,9 @@
                     </div>
 
                     <!-- Instant Phone Push Broadcast -->
-                    <div class="form-check form-switch p-3 bg-white rounded-3 border border-primary border-opacity-25" style="background: linear-gradient(135deg, #ffffff 0%, #f0f4ff 100%);">
+                    <div class="form-check form-switch news-toggle-card p-3 bg-white rounded-3 border border-primary border-opacity-25" style="background: linear-gradient(135deg, #ffffff 0%, #f0f4ff 100%);">
                         {{ form.send_push_notification }}
-                        <label class="form-check-label fw-bold text-primary ms-2 d-flex align-items-center justify-content-between" for="{{ form.send_push_notification.id_for_label }}">
+                        <label class="form-check-label fw-bold text-primary d-flex align-items-center justify-content-between" for="{{ form.send_push_notification.id_for_label }}">
                             <span><i class="fa-solid fa-bell text-warning me-1"></i> Broadcast Push Alert</span>
                         </label>
                         <div class="d-flex align-items-center justify-content-between mt-2 pt-2 border-top border-light">

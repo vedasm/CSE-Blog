@@ -36,7 +36,7 @@ class StudentRegisterView(View):
         if request.user.is_authenticated:
             if request.user.role == 'student':
                 return redirect('public_blog:my_blogs')
-            return redirect('core:dashboard')
+            messages.error(request, 'Staff accounts cannot register for the student portal.')
         return render(request, self.template_name)
         
     def post(self, request):
@@ -63,7 +63,7 @@ class StudentLoginView(View):
         if request.user.is_authenticated:
             if request.user.role == 'student':
                 return redirect('public_blog:my_blogs')
-            return redirect('core:dashboard')
+            messages.error(request, 'Staff accounts cannot use the student portal.')
         return render(request, self.template_name)
         
     def post(self, request):

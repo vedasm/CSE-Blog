@@ -18,7 +18,54 @@
     }
 
     // -------------------------------------------------------------
-    // 2. News Board Live Filter & Quick Search
+    // 2. Live News Ticker
+    // -------------------------------------------------------------
+    function initTopNewsTicker() {
+        const ticker = document.getElementById('marqueeText');
+        if (!ticker) return;
+
+        function showEmptyMessage() {
+            ticker.replaceChildren();
+            const item = document.createElement('span');
+            item.className = 'top-news-ticker-item';
+            item.textContent = 'No published bulletins available.';
+            ticker.appendChild(item);
+            ticker.classList.add('is-empty');
+        }
+
+        fetch('/news/api/feed/?limit=8')
+            .then(function (response) {
+                if (!response.ok) throw new Error('News feed request failed');
+                return response.json();
+            })
+            .then(function (data) {
+                const news = Array.isArray(data.news) ? data.news : [];
+                if (!news.length) {
+                    console.warn('The live news feed contains no published bulletins.');
+                    showEmptyMessage();
+                    return;
+                }
+
+                ticker.replaceChildren();
+                ticker.classList.remove('is-empty');
+                [news, news].forEach(function (newsGroup) {
+                    newsGroup.forEach(function (newsItem) {
+                        const item = document.createElement('span');
+                        item.className = 'top-news-ticker-item';
+                        item.textContent = newsItem.title + (
+                            newsItem.category_display ? ' · ' + newsItem.category_display : ''
+                        );
+                        ticker.appendChild(item);
+                    });
+                });
+            })
+            .catch(function (error) {
+                console.error('Failed to load the live news ticker:', error);
+            });
+    }
+
+    // -------------------------------------------------------------
+    // 3. News Board Live Filter & Quick Search
     // -------------------------------------------------------------
     function initNewsBoardFilter() {
         const filterBar = document.getElementById('newsFilterBar');
@@ -750,6 +797,7 @@
     // -------------------------------------------------------------
     document.addEventListener('DOMContentLoaded', function () {
         initContactFormValidation();
+        initTopNewsTicker();
         initNewsBoardFilter();
         initNewsQuickModal();
         initAchievementCounters();
