@@ -10,8 +10,8 @@ class Faculty(models.Model):
     name = models.CharField(max_length=200)
     designation = models.CharField(max_length=24, choices=Designation.choices)
     specialization = models.CharField(max_length=500)
-    email = models.EmailField(unique=True)
-    phone = models.CharField(max_length=15)
+    email = models.EmailField(unique=True, blank=True, null=True)
+    phone = models.CharField(max_length=15, blank=True)
     scholar_link = models.URLField(blank=True)
     profile_link = models.URLField(
         max_length=500,

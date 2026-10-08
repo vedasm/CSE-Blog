@@ -1,6 +1,7 @@
 import pytest
 from django.urls import reverse
 from apps.accounts.models import AdminUser
+from apps.faculty.forms import FacultyForm
 from apps.faculty.models import Faculty
 
 
@@ -69,3 +70,19 @@ def test_admin_can_manage_faculty_profile_link(client):
     assert res.status_code == 302
     faculty.refresh_from_db()
     assert faculty.profile_link == updated_url
+
+
+@pytest.mark.django_db
+def test_faculty_form_allows_missing_email_and_phone():
+    form = FacultyForm(data={
+        'name': 'Dr. A. New Faculty',
+        'designation': Faculty.Designation.ASSISTANT,
+        'specialization': 'Data Science',
+        'bio': 'Assistant Professor',
+        'display_order': 0,
+    })
+
+    assert form.is_valid()
+    faculty = form.save()
+    assert faculty.email is None
+    assert faculty.phone == ''
